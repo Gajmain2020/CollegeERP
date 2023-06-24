@@ -8,15 +8,12 @@ import AdminLogin from "./components/Admin Login/AdminLogin";
 import ReportComplaint from "./components/ReportComplaint/ReportComplaint";
 
 //import for social logos
-import linkedIn from "../src/Images/linkedin.png";
-import github from "../src/Images/github.png";
-import gmail from "../src/Images/gmail-logo.png";
-import instagram from "../src/Images/instagram.png";
+
 import AdminHomepage from "./components/Admin/AdminHomepage";
 import DepartmentAdmin from "./components/Admin/DepartmentAdmin";
-import Test from "./components/Test";
 import StudentManagement from "./components/Admin/Student Management/StudentManagement";
 import AdminSignUpHidden from "./components/Admin/AdminSignUpHidden";
+import AdminProfile from "./components/Admin/AdminProfile";
 
 export default function App() {
   return (
@@ -28,7 +25,8 @@ export default function App() {
           <Route path="/admin">
             <Route path="signUp" element={<AdminSignUpHidden />} />
             <Route path=":id" element={<AdminHomepage />} />
-            <Route path="department">
+            <Route path=":department">
+              <Route path="profile/:id" element={<AdminProfile />} />
               <Route path=":id" element={<DepartmentAdmin />} />
               <Route
                 path=":id/student-management"

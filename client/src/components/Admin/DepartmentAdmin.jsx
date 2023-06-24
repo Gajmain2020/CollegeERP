@@ -1,10 +1,22 @@
 import { Button } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
+import Test from "../Test";
+import LibraryAdmin from "./LibraryAdmin";
 
 export default function DepartmentAdmin() {
   document.title = "Welcome Admin !!";
+
+  const dept = useLocation().pathname.split("/")[2];
   const id = useLocation().pathname.split("/")[3];
   const navigate = useNavigate();
+
+  if (dept === "Library") {
+    return (
+      <>
+        <LibraryAdmin id={id} />
+      </>
+    );
+  }
 
   return (
     <div className="main-container homepage">

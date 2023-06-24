@@ -1,7 +1,10 @@
 import { Alert, Button, MenuItem, Snackbar, TextField } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signUpAdmin } from "../../services/admin";
 
 export default function AdminSignUpHidden() {
+  const navigate = useNavigate();
   const options = [
     "Library",
     "Announcements",
@@ -18,6 +21,7 @@ export default function AdminSignUpHidden() {
 
   const [disableSignUp, setDisableSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
   const [adminData, setAdminData] = useState({
     name: "",
     email: "",
@@ -42,8 +46,24 @@ export default function AdminSignUpHidden() {
       setDisableSignUp(false);
       return;
     }
-    console.log("the admin Data is", adminData);
-    setDisableSignUp(false);
+
+    signUpAdmin(adminData)
+      .then((res) => {
+        console.log(res);
+        if (res.successful === false) {
+          setErrorMessage(res.message);
+          setDisableSignUp(false);
+          return;
+        }
+
+        alert(res.message);
+        navigate("/admin-login");
+        setDisableSignUp(false);
+      })
+      .catch((e) => {
+        setErrorMessage(e.message);
+        setDisableSignUp(false);
+      });
   }
 
   return (
@@ -64,9 +84,20 @@ export default function AdminSignUpHidden() {
               {errorMessage}
             </Alert>
           </Snackbar>
-          <TextField onChange={handleChange} label="Name" name="name" />
-          <TextField onChange={handleChange} label="Email" name="email" />
           <TextField
+            value={adminData.name}
+            onChange={handleChange}
+            label="Name"
+            name="name"
+          />
+          <TextField
+            value={adminData.email}
+            onChange={handleChange}
+            label="Email"
+            name="email"
+          />
+          <TextField
+            value={adminData.phoneNo}
             onChange={handleChange}
             label="Phone Number"
             name="phoneNo"

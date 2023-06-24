@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 
 //importing routes
 import adminRoutes from "./router/adminRoutes.js";
+import libraryAdminRoutes from "./router/libraryAdminRoute.js";
 import studentRoutes from "./router/studentRoutes.js";
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(cookieParser());
 
 //get routing over here
 app.use("/admin", adminRoutes);
+app.use("/admin/library", libraryAdminRoutes);
 app.use("/student", studentRoutes);
 app.use("/student", studentRoutes);
 
