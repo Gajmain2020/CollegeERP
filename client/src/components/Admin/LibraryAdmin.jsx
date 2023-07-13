@@ -2,23 +2,21 @@ import {
   Alert,
   Backdrop,
   Button,
-  FormLabel,
   InputAdornment,
-  MenuItem,
   Snackbar,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { addSingleBook } from "../../services/library";
-import Navbar from "../Navbar/Navbar";
+import { addMultipleBooks, addSingleBook } from "../../services/library";
+import { useNavigate } from "react-router-dom";
+import Papa from "papaparse";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { decodeToken } from "../../services/common";
 
 export default function LibraryAdmin({ id }) {
-  const [openAddBookBackDrop, setOpenAddBookBackDrop] = useState(false);
-  const [openSingleBookAdd, setOpenSingleBookAdd] = useState(false);
-  const [openMultipleBookAdd, setOpenMultipleBookAdd] = useState(false);
-  const [disableAddButton, setDisableAddButton] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+  const token = localStorage.getItem("authToken");
   const initialState = {
     bookName: "",
     bookId: "",
@@ -26,12 +24,39 @@ export default function LibraryAdmin({ id }) {
     noOfBook: "",
     priceBook: "",
   };
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/not-logged-in");
+      return;
+    }
+  });
+
+  const [userDetails, setUserDetails] = useState(null);
+  const [openAddBookBackDrop, setOpenAddBookBackDrop] = useState(false);
+  const [openSingleBookAdd, setOpenSingleBookAdd] = useState(false);
+  const [openMultipleBookAdd, setOpenMultipleBookAdd] = useState(false);
+  const [disableAddButton, setDisableAddButton] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [singleBook, setSingleBook] = useState(initialState);
+  const [fileName, setFileName] = useState("No File Selected");
+  const [hideSaveButton, setHideSaveButton] = useState(true);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    decodeToken(token)
+      .then((res) => setUserDetails(res))
+      .catch((err) => setErrorMessage(err.message));
+  }, [token]);
 
   function handleSingleBookChange(e) {
     setSingleBook({ ...singleBook, [e.target.name]: e.target.value });
     setDisableAddButton(false);
     setErrorMessage("");
+  }
+  function handleUnloadFile() {
+    setFileName("No File Selected");
+    setHideSaveButton(true);
   }
 
   function handleAddSingleBook() {
@@ -59,6 +84,59 @@ export default function LibraryAdmin({ id }) {
       setSingleBook(initialState);
       setDisableAddButton(false);
     });
+  }
+
+  function handleFileUpload(e) {
+    if (e.target.files.length > 0) {
+      setFileName(e.target.files[0].name);
+      setHideSaveButton(false);
+    }
+    Papa.parse(e.target.files[0], {
+      header: true,
+      skipEmptyLines: true,
+      complete: function (res) {
+        const columnArray = [];
+        const valueArray = [];
+
+        res.data.map((d) => {
+          columnArray.push(Object.keys(d));
+          valueArray.push(Object.values(d));
+        });
+
+        setData(() => res.data);
+      },
+    });
+  }
+
+  function handleAddMultipleBooks() {
+    for (let i = 0; i < data.length; i++) {
+      if (
+        data[i].bookId === "" ||
+        data[i].bookName === "" ||
+        data[i].bookAuthor === "" ||
+        data[i].noOfBooks === "" ||
+        data[i].priceBook === ""
+      ) {
+        setErrorMessage(
+          "Some fields are empty in CSV file. Please update CSV and Upload."
+        );
+        return;
+      }
+    }
+    addMultipleBooks(data)
+      .then((res) => {
+        alert(res.message);
+        setOpenAddBookBackDrop(false);
+        setOpenMultipleBookAdd(false);
+        handleUnloadFile();
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function handleViewData() {
+    const encodedData = encodeURIComponent(JSON.stringify(data));
+    const url = `http://localhost:3000/show-data/library/${encodedData}`;
+    window.open(url, "_blank", "width=800 height=600");
   }
 
   return (
@@ -91,7 +169,7 @@ export default function LibraryAdmin({ id }) {
               Add Books
             </Button>
             <Button
-              onClick={() => console.log("hello")}
+              onClick={() => alert("hello world")}
               variant="contained"
               fullWidth
               size="small"
@@ -110,7 +188,9 @@ export default function LibraryAdmin({ id }) {
             </Button>
             <Button
               variant="contained"
-              onClick={() => console.log("hello")}
+              onClick={() =>
+                navigate(`/admin/Library/edit-books/${userDetails.id}`)
+              }
               fullWidth
               size="small"
             >
@@ -251,6 +331,77 @@ export default function LibraryAdmin({ id }) {
               >
                 Add
               </Button>
+            </div>
+          </div>
+        </Backdrop>
+
+        {/* BACKDROP FOR MULTIPLE BOOK ADD  */}
+
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={openMultipleBookAdd}
+          className="test"
+        >
+          <div className="backdrop-element">
+            <div className="backdrop-close-btn">
+              <Button
+                variant="contained"
+                color="error"
+                size="small"
+                onClick={() => {
+                  setOpenMultipleBookAdd(false);
+                  setFileName("No File Selected");
+                  setHideSaveButton(true);
+                }}
+              >
+                <CloseIcon fontSize="large" />
+              </Button>
+            </div>
+            <div className="backdrop-options">
+              <div className="backdrop-options-column">
+                <div className="password">
+                  <TextField fullWidth value={fileName} />
+                  {fileName !== "No File Selected" && (
+                    <>
+                      <Button
+                        onClick={handleUnloadFile}
+                        variant="contained"
+                        color="error"
+                        size="large"
+                      >
+                        <DeleteIcon />
+                      </Button>
+                    </>
+                  )}
+                </div>
+
+                <Button variant="contained" component="label">
+                  Upload File
+                  <input
+                    onChange={handleFileUpload}
+                    type="file"
+                    accept=".csv"
+                    hidden
+                  />
+                </Button>
+
+                {!hideSaveButton && (
+                  <>
+                    <Button
+                      onClick={handleAddMultipleBooks}
+                      variant="contained"
+                      fullWidth
+                      color="success"
+                      size="large"
+                    >
+                      Proceed
+                    </Button>
+                    <Button size="small" onClick={handleViewData}>
+                      Click Here To Varify Data
+                    </Button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </Backdrop>

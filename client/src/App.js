@@ -14,6 +14,9 @@ import DepartmentAdmin from "./components/Admin/DepartmentAdmin";
 import StudentManagement from "./components/Admin/Student Management/StudentManagement";
 import AdminSignUpHidden from "./components/Admin/AdminSignUpHidden";
 import AdminProfile from "./components/Admin/AdminProfile";
+import NotLoggedIn from "./components/NotLoggedIn/NotLoggedIn";
+import ShowData from "./components/ShowData/ShowData";
+import EditBooks from "./components/Admin/LibraryAdmin/EditBooks";
 
 export default function App() {
   return (
@@ -28,6 +31,7 @@ export default function App() {
             <Route path=":department">
               <Route path="profile/:id" element={<AdminProfile />} />
               <Route path=":id" element={<DepartmentAdmin />} />
+              <Route path="edit-books/:id" element={<EditBooks />} />
               <Route
                 path=":id/student-management"
                 element={<StudentManagement />}
@@ -55,8 +59,13 @@ export default function App() {
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/report-complaint" element={<ReportComplaint />} />
           <Route path="/" element={<Homepage />} />
+          <Route path="/not-logged-in" element={<NotLoggedIn />} />
+          <Route path="/show-data/library/:data" element={<ShowData />} />
         </Routes>
-        {/* <div className="footer">
+
+        {/* FOOTER OVER HERE */}
+        <>
+          {/* <div className="footer">
           <div className="footer-content">
             <div>
               All Rights Reserved To{" "}
@@ -116,6 +125,7 @@ export default function App() {
             </div>
           </div>
         </div> */}
+        </>
       </Container>
     </>
   );

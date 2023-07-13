@@ -16,12 +16,95 @@ export const addSingleBook = async (req, res) => {
       priceBook,
       noOfBook,
     });
+    return res.status(200).json({
+      message: `Book with id ${bookId} added successfully`,
+      successful: true,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", successful: false });
+  }
+};
+
+export const addMultipleBooks = async (req, res) => {
+  try {
+    const added = [];
+    const rejected = [];
+    const books = req.body;
+
+    for (let i = 0; i < books.length; i++) {
+      const { bookId, bookName, bookAuthor, noOfBook, priceBook } = books[i];
+
+      const bookAlreadyAdded = await libraryBooks.findOne({ bookId });
+      if (bookAlreadyAdded) {
+        rejected.push(books[i]);
+        continue;
+      }
+      await libraryBooks.create({
+        bookName,
+        bookId,
+        bookAuthor,
+        priceBook,
+        noOfBook,
+        availableNoOfBooks: noOfBook,
+      });
+      added.push(books[i]);
+    }
+    return res.status(200).json({
+      data: { added, rejected },
+      message: "Books Added Successfully",
+      successful: true,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", successful: false });
+  }
+};
+
+export const fetchBooks = async (req, res) => {
+  try {
+    const books = await libraryBooks.find();
+
+    return res.status(200).json({
+      books,
+      successful: true,
+    });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", successful: false });
+  }
+};
+
+export const deleteBook = async (req, res) => {
+  try {
+    const { bookId } = req.query;
+    await libraryBooks.findOneAndRemove({ bookId });
+
+    const books = await libraryBooks.find();
+
+    return res.status(200).json({
+      message: "Book Deleted successfully",
+      books,
+      successful: true,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", successful: false });
+  }
+};
+
+export const editBook = async (req, res) => {
+  try {
+    const id = req.query.bookId;
+    const book = req.body;
+    await libraryBooks.findByIdAndUpdate(id, book);
     return res
       .status(200)
-      .json({
-        message: `Book with id ${bookId} added successfully`,
-        successful: true,
-      });
+      .json({ successful: true, message: "Book Updated Successfully" });
   } catch (error) {
     return res
       .status(500)

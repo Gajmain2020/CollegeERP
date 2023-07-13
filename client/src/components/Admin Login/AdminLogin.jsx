@@ -1,19 +1,32 @@
 import { TextField, Button, Snackbar, Alert } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { loginAdmin } from "../../services/admin";
 import { useNavigate } from "react-router-dom";
+import { checkForToken, decodeToken } from "../../services/common";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [disableLogin, setDisableLogin] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    checkForToken()
+      .then((res) => {
+        if (res.tokenExists === false) return;
+        decodeToken(res.token).then((res) =>
+          navigate(`/${res.userType}/${res.department}/${res.id}`)
+        );
+      })
+      .catch((err) => console.log(err));
+  }, [navigate]);
 
   function handleChange(e) {
     setDisableLogin(false);
@@ -35,7 +48,6 @@ export default function AdminLogin() {
           setDisableLogin(false);
           return;
         }
-
         localStorage.setItem("authToken", res.token);
 
         navigate(`/admin/${res.department}/${res.id}`);

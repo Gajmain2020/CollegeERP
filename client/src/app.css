@@ -1,11 +1,14 @@
 /*
   1. Use a more-intuitive box-sizing model.
 */
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Fira+Code:wght@300;500;600&family=Labrada:ital,wght@0,100;0,200;0,400;1,200&family=Lato:ital@0;1&family=Montserrat&family=Open+Sans:ital,wght@0,400;0,500;1,400&family=Roboto:ital,wght@0,400;0,500;1,400&family=Ubuntu&family=Zeyada&display=swap");
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
+
 /*
   2. Remove default margin
 */
@@ -316,4 +319,79 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.status {
+  color: green;
+  font-weight: bold;
+}
+
+.countdown {
+  text-align: center;
+}
+
+.message {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.timer {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.table {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 1.5em;
+}
+
+.table .table-heading {
+  font-size: 2em;
+  margin-bottom: 0.5em;
+  text-transform: capitalize;
+  font-family: "ubuntu", Courier, monospace;
+}
+
+.edit-book-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5em;
+  margin-top: 0.3em;
+}
+.edit-book-container .books {
+  min-height: 350px;
+}
+
+.edit-book-container .search-component {
+  padding: 0.5em 2em;
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+}
+
+.edit-book-container .pages-button {
+  display: flex;
+  gap: 0.5em;
+}
+.edit-book-container .pages-button button {
+  border-radius: 50px !important;
+}
+.edit-book-container .pages-button .next-prev {
+  outline: 2px solid rgb(122, 122, 122);
+  border-radius: 50px;
+}
+
+.edit-book-container .title {
+  font-family: "Montserrat", "ubuntu", monospace;
+  font-weight: bold;
+  font-size: 2.2em;
+  padding: 0;
+  margin: 0;
+  border-bottom: 3px solid rgb(255, 141, 141);
+  border-radius: 30%;
 }

@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import brandLogo from "../../Images/brand logo.png";
 import Button from "@mui/material/Button";
 import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
+import { pink } from "@mui/material/colors";
 import {
   Avatar,
   Backdrop,
@@ -20,10 +21,27 @@ import { getAdminData } from "../../services/admin";
 import { updateUser } from "../../services/common";
 
 export default function Navbar() {
+  const isShowData = useLocation().pathname.split("/")[1];
+  const token = localStorage.getItem("authToken");
+
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [disabelSaveButton, setDisableSaveButton] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const [openUpdateProfileBackdrop, setOpenUpdateProfileBackdrop] =
+    useState(false);
+  const [anchorElUser, setAnchorElUser] = useState(false);
+  const [receivedData, setReceivedData] = useState(null);
+
+  useEffect(() => {
+    setData(token ? jwtDecode(token) : null);
+  }, [token]);
+
+  if (isShowData === "show-data") {
+    return <></>;
+  }
+
   const options = [
     "Library",
     "Announcements",
@@ -38,16 +56,6 @@ export default function Navbar() {
     "MECH",
   ];
 
-  const [openUpdateProfileBackdrop, setOpenUpdateProfileBackdrop] =
-    useState(false);
-
-  const token = localStorage.getItem("authToken");
-  useEffect(() => {
-    setData(token ? jwtDecode(token) : null);
-  }, [token]);
-
-  // const data = token ? jwtDecode(token) : null;
-
   function handleAdminButtonClick() {
     navigate("/admin-login");
   }
@@ -59,12 +67,6 @@ export default function Navbar() {
   function handleLoginClick() {
     navigate("/");
   }
-  function handleSignupClick() {
-    alert("SignUp Button Clicked");
-  }
-
-  const [anchorElUser, setAnchorElUser] = useState(false);
-  const [receivedData, setReceivedData] = useState(null);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(true);
@@ -109,7 +111,11 @@ export default function Navbar() {
           setDisableSaveButton(false);
           return;
         }
-        localStorage.setItem("authToken", res.token);
+        const expirationTime = new Date().getTime() + 3 * 60 * 60 * 1000; //3hours
+        localStorage.setItem("authToken", {
+          token: res.token,
+          expires: expirationTime,
+        });
         alert(res.message);
         setDisableSaveButton(false);
         setReceivedData({ ...receivedData, oldPassword: "", newPassword: "" });
@@ -168,7 +174,9 @@ export default function Navbar() {
               </Button>
               <Tooltip title="Open Menu">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar>{data.name[0].toUpperCase()}</Avatar>
+                  <Avatar sx={{ bgcolor: pink[600] }}>
+                    {data.name[0].toUpperCase()}
+                  </Avatar>
                 </IconButton>
               </Tooltip>
               <Menu
@@ -187,14 +195,6 @@ export default function Navbar() {
                 open={anchorElUser}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem
-                  onClick={() => {
-                    navigate(`/admin/${data.department}/profile/${data.id}`);
-                    setAnchorElUser(false);
-                  }}
-                >
-                  Profile
-                </MenuItem>
                 <MenuItem
                   onClick={() => {
                     setOpenUpdateProfileBackdrop(true);
@@ -219,14 +219,6 @@ export default function Navbar() {
                 onClick={handleLoginClick}
               >
                 Login
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                color="inherit"
-                onClick={handleSignupClick}
-              >
-                Sign Up
               </Button>
             </>
           )}
@@ -255,7 +247,7 @@ export default function Navbar() {
                 size="small"
                 onClick={() => setOpenUpdateProfileBackdrop(false)}
               >
-                <CloseIcon fontSize="large" />
+                <CloseIcon fontSize="small" />
               </Button>
             </div>
             <div className="backdrop-options-column">

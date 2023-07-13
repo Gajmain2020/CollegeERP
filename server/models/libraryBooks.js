@@ -7,6 +7,7 @@ const libraryBookSchema = mongoose.Schema({
   bookName: reqString,
   bookAuthor: reqString,
   noOfBook: reqString,
+  availableNoOfBooks: String,
   priceBook: reqString,
   issuedTo: [{ studentName: reqString, studentId: reqString }],
   createdAt: { type: Date, defaultValue: new Date() },
