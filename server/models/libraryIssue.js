@@ -2,29 +2,30 @@ import mongoose from "mongoose";
 
 const reqString = { type: String, required: true };
 
-const libraryIssueSchema = mongoose.Schema({
-  studentId: reqString,
+const libraryIssueToStudentSchema = mongoose.Schema({
   studentName: reqString,
-  studentRollNo: reqString,
+  studentRollNumber: reqString,
+  semester: reqString,
   department: reqString,
   fine: { type: Number, defaultValue: 0 },
-  currentIssueBook: [
+  currentIssuedBooks: [
     {
-      type: String,
       bookName: String,
       bookId: String,
-      issueData: Date,
+      issuedOn: { type: Date, defaultValue: new Date() },
     },
   ],
-  issueedBooks: [
+  allIssuedBooks: [
     {
-      type: String,
       bookName: String,
       bookId: String,
-      issueData: Date,
+      issueData: { type: Date, defaultValue: new Date() },
       returnDate: Date,
     },
   ],
 });
 
-export default mongoose.model(LibraryStudent, "libraryIssueSchema");
+export default mongoose.model(
+  "LibraryIssueToStudent",
+  libraryIssueToStudentSchema
+);

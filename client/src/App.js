@@ -17,6 +17,9 @@ import AdminProfile from "./components/Admin/AdminProfile";
 import NotLoggedIn from "./components/NotLoggedIn/NotLoggedIn";
 import ShowData from "./components/ShowData/ShowData";
 import EditBooks from "./components/Admin/LibraryAdmin/EditBooks";
+import IssueBook from "./components/Admin/LibraryAdmin/IssueBook";
+import ShowDataIssueHistory from "./components/ShowData/ShowDataIssueHistory";
+import ReturnBooks from "./components/Admin/LibraryAdmin/ReturnBooks";
 
 export default function App() {
   return (
@@ -32,6 +35,9 @@ export default function App() {
               <Route path="profile/:id" element={<AdminProfile />} />
               <Route path=":id" element={<DepartmentAdmin />} />
               <Route path="edit-books/:id" element={<EditBooks />} />
+              <Route path="issue-books/:id" element={<IssueBook />} />
+              <Route path="return-books/:id" element={<ReturnBooks />} />
+
               <Route
                 path=":id/student-management"
                 element={<StudentManagement />}
@@ -61,6 +67,10 @@ export default function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/not-logged-in" element={<NotLoggedIn />} />
           <Route path="/show-data/library/:data" element={<ShowData />} />
+          <Route
+            path="/show-data/library/issue-history/:data"
+            element={<ShowDataIssueHistory />}
+          />
         </Routes>
 
         {/* FOOTER OVER HERE */}

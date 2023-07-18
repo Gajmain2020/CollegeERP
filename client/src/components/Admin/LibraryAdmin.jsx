@@ -169,7 +169,9 @@ export default function LibraryAdmin({ id }) {
               Add Books
             </Button>
             <Button
-              onClick={() => alert("hello world")}
+              onClick={() =>
+                navigate(`/admin/Library/issue-books/${userDetails.id}`)
+              }
               variant="contained"
               fullWidth
               size="small"
@@ -179,7 +181,7 @@ export default function LibraryAdmin({ id }) {
           </div>
           <div className="button-row">
             <Button
-              onClick={() => console.log("hello")}
+              onClick={() => alert("work pending here")}
               variant="contained"
               fullWidth
               size="small"
@@ -200,14 +202,16 @@ export default function LibraryAdmin({ id }) {
           <div className="button-row">
             <Button
               variant="contained"
-              onClick={() => console.log("hello")}
+              onClick={() => alert("work pending here")}
               fullWidth
               size="small"
             >
               Complaints
             </Button>
             <Button
-              onClick={() => console.log("hello")}
+              onClick={() =>
+                navigate(`/admin/Library/return-books/${userDetails.id}`)
+              }
               variant="contained"
               fullWidth
               size="small"

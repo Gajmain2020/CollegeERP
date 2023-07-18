@@ -64,3 +64,57 @@ export async function bookUpdate(book) {
     return error.response.data;
   }
 }
+
+export async function searchBookById(id) {
+  try {
+    const response = await axios({
+      url: URL + `search-book/?bookId=${id}`,
+      method: "GET",
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function searchBookByName(name) {
+  try {
+    const response = await axios({
+      url: URL + `search-book/?bookName=${name}`,
+      method: "GET",
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function issueBooks(studentData, selectedBooks) {
+  const data = { studentData, selectedBooks };
+
+  try {
+    const response = await axios({
+      url: URL + `issue-books`,
+      method: "POST",
+      data: data,
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function returnBooks(selectedBooks, studentData) {
+  const data = { studentData, selectedBooks };
+  try {
+    const response = await axios({
+      url: URL + "return-books",
+      method: "PATCH",
+      data,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}

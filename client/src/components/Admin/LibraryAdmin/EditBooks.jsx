@@ -113,6 +113,7 @@ export default function EditBooks() {
       });
   }
 
+  //! SINGLE BOOK EDIT FUNCTION
   async function handleEditBook() {
     books[editIndex] = bookEdit;
     const response = await bookUpdate(bookEdit);
@@ -124,7 +125,6 @@ export default function EditBooks() {
       setBookEdit(null);
       setEditIndex(-1);
     }
-    console.log(response);
   }
 
   function handleToggleBookEdit(book, idx) {
@@ -135,49 +135,45 @@ export default function EditBooks() {
 
   function renderRow(book, idx) {
     return (
-      <>
-        <TableRow hover>
-          <TableCell>{idx + 1}</TableCell>
-          <TableCell>{book.bookName}</TableCell>
-          <TableCell>{book.bookId}</TableCell>
-          <TableCell>{book.bookAuthor}</TableCell>
-          <TableCell>{book.noOfBook}</TableCell>
-          <TableCell>{book.priceBook}</TableCell>
-          <TableCell>
-            <Button
-              size="small"
-              variant="contained"
-              color="warning"
-              onClick={() => {
-                handleToggleBookEdit(book, idx);
-              }}
-            >
-              <ModeEditOutlineIcon fontSize="small" />
-            </Button>
-          </TableCell>
-          <TableCell>
-            <Button
-              size="small"
-              variant="contained"
-              color="error"
-              onClick={() => handleDeleteBook(book.bookId)}
-            >
-              <DeleteForeverIcon fontSize="small" />
-            </Button>
-          </TableCell>
-        </TableRow>
-      </>
+      <TableRow hover key={book.bookId}>
+        <TableCell>{idx + 1}</TableCell>
+        <TableCell>{book.bookName}</TableCell>
+        <TableCell>{book.bookId}</TableCell>
+        <TableCell>{book.bookAuthor}</TableCell>
+        <TableCell>{book.noOfBook}</TableCell>
+        <TableCell>{book.priceBook}</TableCell>
+        <TableCell>
+          <Button
+            size="small"
+            variant="contained"
+            color="warning"
+            onClick={() => {
+              handleToggleBookEdit(book, idx);
+            }}
+          >
+            <ModeEditOutlineIcon fontSize="small" />
+          </Button>
+        </TableCell>
+        <TableCell>
+          <Button
+            size="small"
+            variant="contained"
+            color="error"
+            onClick={() => handleDeleteBook(book.bookId)}
+          >
+            <DeleteForeverIcon fontSize="small" />
+          </Button>
+        </TableCell>
+      </TableRow>
     );
   }
 
   //! handle searching element to work well
   //* need to work on useEffect for fetching and using it to set total pages
   function handleSearch() {
-    console.log(searchData);
     const filterBook = books.filter((book) =>
       book.bookName.includes(searchData.bookName)
     );
-    console.table(filterBook);
     setBooks(filterBook);
     setTotalItems(filterBook.length);
     setTotalPages(filterBook.length / itemsPerPage);

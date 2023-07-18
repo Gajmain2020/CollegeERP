@@ -244,12 +244,13 @@ h6 {
 }
 
 .homepage {
-  border: solid 1px red;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
 }
 .homepage .button-container {
   display: flex;
+  flex-wrap: wrap;
 }
 .homepage .button-container .button-row {
   display: flex;
@@ -394,4 +395,155 @@ input::-webkit-inner-spin-button {
   margin: 0;
   border-bottom: 3px solid rgb(255, 141, 141);
   border-radius: 30%;
+}
+
+.issue-book-container {
+  margin: 1em 0.2em;
+}
+
+.student-data-container {
+  height: 3.5em;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 2em;
+}
+
+.student-data-container .student-data {
+  flex-direction: column;
+  flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  font-family: "Montserrat", "ubuntu", monospace;
+  justify-content: center;
+  height: 3.5em;
+  width: 100%;
+  background-color: #36444b7c;
+
+  border: solid 3px #ffa984;
+  border-radius: 15px;
+}
+.student-data-container .student-data .prefix {
+  color: rgb(222, 222, 222);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.641);
+  font-size: 0.8em;
+}
+.student-data-container .student-data .data {
+  color: rgb(193, 172, 255);
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.issue-book-container .close-modal-button {
+  display: flex;
+  justify-content: flex-end;
+  margin: 1em 0;
+}
+
+.issue-book-container .issue-books-table {
+  margin: 2em 0;
+}
+.issue-book-container .issue-books-table .add-book-button {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0.6em 0em;
+}
+.issue-book-container .issue-books-table .add-book-button .Mui-disabled {
+  color: rgb(101, 101, 101);
+  background-color: rgba(162, 162, 162, 0.69);
+}
+
+.homepage .heading {
+  color: rgb(236, 236, 236);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 2em 0;
+  font-family: "ubuntu";
+}
+
+.homepage .heading span {
+  color: rgba(255, 255, 255, 0.501);
+  border-bottom: 2px solid rgba(78, 78, 78, 0.452);
+  font-family: "Montserrat";
+}
+
+.homepage .button-container .button-row .Mui-disabled {
+  /* color: red; */
+  background-color: #2646536d;
+}
+
+.backdrop-element .backdrop-options-column .color-new {
+  background-color: #30e3ca;
+  color: rgba(32, 32, 32, 0.799);
+}
+.backdrop-element .backdrop-options-column .color-new:hover {
+  background-color: #09585b;
+  transition: 500ms;
+  color: white;
+}
+
+.modal-close-button {
+  display: flex;
+  justify-content: flex-end;
+  margin: 1.5em 0 1em 0;
+}
+
+.show-data-none {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.show-data-none .message {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.show-data-none .message .image {
+  width: 10em;
+  padding: 1.3em;
+  border-radius: 50%;
+  background-color: rgba(162, 162, 162, 0.367);
+}
+
+.return-container {
+  border: solid 1px #fff;
+  padding: 2em 3em;
+  margin: 0.5em 3.5em;
+  background-color: rgba(216, 216, 216, 0.579);
+  border-radius: 30px;
+}
+
+.return-container .return-container-search {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 0 4em;
+}
+
+.option-row {
+  display: flex;
+  flex-direction: row;
+  gap: 2em;
+  justify-content: space-around;
+}
+
+.return-books-table {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+.homepage .heading {
+  font-size: 2.5em;
+  margin: 0.5em 0;
+  font-family: "Open Sans", "Helvetica Neue";
+  font-weight: 500;
+  border-bottom: 2px solid rgba(199, 199, 199, 0.249);
+  border-bottom-style: dashed;
 }
