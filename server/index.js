@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import adminRoutes from "./router/adminRoutes.js";
 import libraryAdminRoutes from "./router/libraryAdminRoute.js";
 import studentRoutes from "./router/studentRoutes.js";
+import announcementRoutes from "./router/announcementAdminRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,7 +21,7 @@ app.use(cookieParser());
 app.use("/admin", adminRoutes);
 app.use("/admin/library", libraryAdminRoutes);
 app.use("/student", studentRoutes);
-app.use("/student", studentRoutes);
+app.use("/admin/announcements", announcementRoutes);
 
 mongoose.set("strictQuery", true);
 mongoose

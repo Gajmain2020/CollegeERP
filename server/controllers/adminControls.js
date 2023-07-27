@@ -58,7 +58,7 @@ export const loginAdmin = async (req, res) => {
         department: user.department,
         name: user.name,
       },
-      "signKey",
+      `${user.department}`,
       { expiresIn: "1h" }
     );
 

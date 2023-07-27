@@ -20,7 +20,9 @@ export default function AdminLogin() {
   useEffect(() => {
     checkForToken()
       .then((res) => {
-        if (res.tokenExists === false) return;
+        if (res.tokenExists === false) {
+          return;
+        }
         decodeToken(res.token).then((res) =>
           navigate(`/${res.userType}/${res.department}/${res.id}`)
         );

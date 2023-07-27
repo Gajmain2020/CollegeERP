@@ -294,7 +294,7 @@ h6 {
   flex-direction: column;
   gap: 1em;
   margin-top: 1em;
-  max-width: 40em;
+  width: 40em;
   padding: 0.5em;
 }
 
@@ -375,14 +375,16 @@ input::-webkit-inner-spin-button {
   flex-wrap: wrap;
 }
 
-.edit-book-container .pages-button {
+.pages-button {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 0.5em;
 }
-.edit-book-container .pages-button button {
+.pages-button button {
   border-radius: 50px !important;
 }
-.edit-book-container .pages-button .next-prev {
+.pages-button .next-prev {
   outline: 2px solid rgb(122, 122, 122);
   border-radius: 50px;
 }
@@ -546,4 +548,98 @@ input::-webkit-inner-spin-button {
   font-weight: 500;
   border-bottom: 2px solid rgba(199, 199, 199, 0.249);
   border-bottom-style: dashed;
+}
+
+.container .form-container {
+  background-color: rgba(254, 254, 254, 0.481);
+  padding: 2em 1em;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.container .form-container .row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2.5em;
+}
+
+.announcement-modal .option-container {
+  display: flex;
+  gap: 2em;
+  padding: 1em 0.2em;
+}
+
+.announcement-modal .option-container button {
+  color: #000;
+  background-color: rgba(181, 181, 181, 0.645);
+  height: 3.5em;
+  text-decoration: underline;
+  border: solid 2px #222222;
+  border-radius: 1em;
+}
+.announcement-modal .option-container button:disabled {
+  color: #000;
+  background-color: rgba(181, 181, 181, 0.177);
+  height: 3.5em;
+  text-decoration: underline;
+  border: solid 2px #222222;
+  border-radius: 1em;
+}
+
+.table-row button {
+  background-color: rgb(238, 202, 22);
+  color: #000;
+  text-transform: capitalize;
+  font-size: 0.9em;
+  padding: 0.2em;
+  margin: 0;
+}
+
+.read-only {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  color: rgb(0, 0, 0);
+  font-family: "Open Sans", sans-serif;
+  font-size: 1.1em;
+}
+
+.read-item {
+  display: flex;
+  gap: 2em;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  transition: 0.5s;
+  padding: 0.5em 0.2em;
+  border: none;
+}
+.read-item:hover {
+  border: 1px solid red;
+  border-radius: 10px;
+}
+.read-item .data-value {
+  width: 100%;
+}
+.read-item .data-heading {
+  width: 100%;
+  background-color: rgb(105, 148, 179);
+  border-radius: 10px;
+  padding: 0.25em;
+}
+.row {
+  display: flex;
+  gap: 1em;
+}
+.caption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  color: rgba(89, 89, 89, 0.71);
+  font: "open sans";
 }

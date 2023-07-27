@@ -222,42 +222,40 @@ export const returnBooks = async (req, res) => {
       const book = await libraryBooks.findOne({
         bookId: selectedBooks[i].bookId,
       });
-      for (let j = 0; j < book.issuedTo; j++) {
+
+      for (let j = 0; j < book.issuedTo.length; j++) {
+        console.log(book.issuedTo[j]);
         if (book.issuedTo[j].studentRollNumber === studentData.rollNo) {
           book.pastIssuedTo.push({
-            studentRollNumber: studentData.roll,
+            studentRollNumber: studentData.rollNo,
             studentName: studentData.name,
             issuedOn: book.issuedTo[j].issuedOn,
             returnedOn: new Date(),
           });
-          book.availableNoOfBooks += 1;
+          book.availableNoOfBooks = parseInt(book.availableNoOfBooks) + 1;
           book.issuedTo.splice(j, 1);
         }
       }
-      book.save();
+      await book.save();
     }
     const studentOnIssueRecord = await libraryIssue.findOne({
       studentRollNumber: studentData.rollNo,
     });
 
     for (let i = 0; i < studentOnIssueRecord.currentIssuedBooks.length; i++) {
-      console.log(studentOnIssueRecord.currentIssuedBooks[i]);
       for (let j = 0; j < selectedBooks.length; j++) {
         if (
           studentOnIssueRecord.currentIssuedBooks[i].bookId ===
           selectedBooks[j].bookId
         ) {
           studentOnIssueRecord.allIssuedBooks.push({
-            bookId: studentOnIssueRecord.currentIssuedBooks[i].bookId,
-            bookName: studentOnIssueRecord.currentIssuedBooks[i].bookName,
-            issuedDate: studentOnIssueRecord.currentIssuedBooks[i].issuedOn,
+            ...studentOnIssueRecord.currentIssuedBooks[i],
             returnDate: new Date(),
           });
           studentOnIssueRecord.currentIssuedBooks.splice(i, 1);
 
           studentOnIssueRecord.save();
         }
-        console.log("book issue wala bhi kaam ho gaya");
       }
     }
     return res.status(200).json({

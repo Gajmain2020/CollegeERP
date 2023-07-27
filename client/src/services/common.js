@@ -24,7 +24,7 @@ export async function checkForToken() {
       tokenExists: true,
     };
   }
-  return false;
+  return { tokenExists: false };
 }
 
 export async function decodeToken(token) {
