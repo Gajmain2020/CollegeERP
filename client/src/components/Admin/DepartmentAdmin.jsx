@@ -2,6 +2,7 @@ import { Button } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import LibraryAdmin from "./LibraryAdmin";
 import AnnouncementAdmin from "./Announcements/AnnouncementAdmin";
+import ExamAdmin from "./ExamAdmin/ExamAdmin";
 
 export default function DepartmentAdmin() {
   document.title = "Welcome Admin !!";
@@ -21,6 +22,13 @@ export default function DepartmentAdmin() {
     return (
       <>
         <AnnouncementAdmin id={id} />
+      </>
+    );
+  }
+  if (dept === "Exam") {
+    return (
+      <>
+        <ExamAdmin id={id} />
       </>
     );
   }

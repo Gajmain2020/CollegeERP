@@ -20,6 +20,8 @@ import EditBooks from "./components/Admin/LibraryAdmin/EditBooks";
 import IssueBook from "./components/Admin/LibraryAdmin/IssueBook";
 import ShowDataIssueHistory from "./components/ShowData/ShowDataIssueHistory";
 import ReturnBooks from "./components/Admin/LibraryAdmin/ReturnBooks";
+import ReleaseExamForm from "./components/Admin/ExamAdmin/Helper/ReleaseExamForm";
+import ReleaseTImeTable from "./components/Admin/ExamAdmin/Helper/ReleaseTImeTable";
 
 export default function App() {
   return (
@@ -37,6 +39,8 @@ export default function App() {
               <Route path="edit-books/:id" element={<EditBooks />} />
               <Route path="issue-books/:id" element={<IssueBook />} />
               <Route path="return-books/:id" element={<ReturnBooks />} />
+              <Route path="exam-form/:id" element={<ReleaseExamForm />} />
+              <Route path="time-table/:id" element={<ReleaseTImeTable />} />
 
               <Route
                 path=":id/student-management"
@@ -71,6 +75,7 @@ export default function App() {
             path="/show-data/library/issue-history/:data"
             element={<ShowDataIssueHistory />}
           />
+          <Route path="*" element={<>page not found</>} />
         </Routes>
 
         {/* FOOTER OVER HERE */}

@@ -9,6 +9,7 @@ import adminRoutes from "./router/adminRoutes.js";
 import libraryAdminRoutes from "./router/libraryAdminRoute.js";
 import studentRoutes from "./router/studentRoutes.js";
 import announcementRoutes from "./router/announcementAdminRoutes.js";
+import examRoutes from "./router/examRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,6 +23,7 @@ app.use("/admin", adminRoutes);
 app.use("/admin/library", libraryAdminRoutes);
 app.use("/student", studentRoutes);
 app.use("/admin/announcements", announcementRoutes);
+app.use("/admin/exams", examRoutes);
 
 mongoose.set("strictQuery", true);
 mongoose

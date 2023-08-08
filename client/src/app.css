@@ -258,6 +258,11 @@ h6 {
   gap: 3em;
 }
 
+.background-white {
+  background-color: rgba(213, 213, 213, 0.477);
+  padding: 2em 1em;
+}
+
 .homepage .button-container .button-row .MuiButtonBase-root {
   height: 5em;
   font-size: 1em;
@@ -490,6 +495,31 @@ input::-webkit-inner-spin-button {
   display: flex;
   justify-content: flex-end;
   margin: 1.5em 0 1em 0;
+}
+.modal-close-button .MuiButton-outlined {
+  outline: 1.5px solid red;
+  transition: 0.3s;
+}
+.modal-close-button .MuiButton-outlined:hover {
+  outline-offset: 3px;
+}
+
+.row .MuiButton-outlined {
+  background-color: #a5a8ff3b;
+  transition: 0.3s;
+}
+.row .MuiButton-outlined:hover {
+  background-color: #ed6c0265;
+  color: white;
+  outline: 1.5px solid #ed6c02;
+  outline-offset: 2px;
+}
+.row .MuiButton-contained {
+  outline: 1px solid green;
+  transition: 0.3s;
+}
+.row .MuiButton-contained:hover {
+  outline-offset: 3px;
 }
 
 .show-data-none {
