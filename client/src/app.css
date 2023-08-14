@@ -673,3 +673,66 @@ input::-webkit-inner-spin-button {
   color: rgba(89, 89, 89, 0.71);
   font: "open sans";
 }
+
+.outline-effect.MuiButton-outlined {
+  color: rgb(144, 32, 32);
+  background-color: #e7e7e7;
+  border: none;
+  transition: 200ms;
+  outline: solid 1px blue;
+}
+.outline-effect.MuiButton-outlined:hover {
+  color: rgb(230, 52, 52);
+  outline: solid blue 1px;
+  background-color: rgb(168, 168, 168);
+  color: white;
+  border: none;
+  outline-offset: 0.2em;
+}
+
+.notice {
+  color: rgb(226, 226, 226);
+  font-family: "ubuntu";
+  font-size: 1.2em;
+  padding: 2em 0 0 0;
+}
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80 vh;
+}
+
+.not-found-image {
+  max-width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 12em;
+}
+
+.error-code {
+  font-size: 6rem;
+  color: #f0311ccb;
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  font-size: 1.5rem;
+  color: #737373;
+}
+
+.info {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1em;
+}
+
+.info .info-text {
+  color: rgba(35, 34, 34, 0.836);
+  font-family: "Open Sans", "Helvetica Neue";
+}

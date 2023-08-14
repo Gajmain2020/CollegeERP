@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = "http://localhost:5000/admin/";
+const URL = "http://localhost:3001/admin/";
 
 export async function signUpAdmin(adminData) {
   try {

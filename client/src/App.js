@@ -22,6 +22,9 @@ import ShowDataIssueHistory from "./components/ShowData/ShowDataIssueHistory";
 import ReturnBooks from "./components/Admin/LibraryAdmin/ReturnBooks";
 import ReleaseExamForm from "./components/Admin/ExamAdmin/Helper/ReleaseExamForm";
 import ReleaseTImeTable from "./components/Admin/ExamAdmin/Helper/ReleaseTImeTable";
+import ReleaseBacklogForm from "./components/Admin/ExamAdmin/Helper/ReleaseBacklogForm";
+import PageNotFound from "./components/PageNotFound";
+import UploadPYQ from "./components/Admin/ExamAdmin/Helper/UploadPYQ";
 
 export default function App() {
   return (
@@ -41,6 +44,11 @@ export default function App() {
               <Route path="return-books/:id" element={<ReturnBooks />} />
               <Route path="exam-form/:id" element={<ReleaseExamForm />} />
               <Route path="time-table/:id" element={<ReleaseTImeTable />} />
+              <Route path="upload-pyq/:id" element={<UploadPYQ />} />
+              <Route
+                path="release-backlog-form/:id"
+                element={<ReleaseBacklogForm />}
+              />
 
               <Route
                 path=":id/student-management"
@@ -75,72 +83,8 @@ export default function App() {
             path="/show-data/library/issue-history/:data"
             element={<ShowDataIssueHistory />}
           />
-          <Route path="*" element={<>page not found</>} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
-
-        {/* FOOTER OVER HERE */}
-        <>
-          {/* <div className="footer">
-          <div className="footer-content">
-            <div>
-              All Rights Reserved To{" "}
-              <a
-                className="link"
-                href="https://www.linkedin.com/in/gajendra-sahu-b24a51227/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Gajendra Sahu
-              </a>
-            </div>
-            <div>
-              Developed By{" "}
-              <a
-                className="link"
-                href="https://www.linkedin.com/in/gajendra-sahu-b24a51227/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Gajendra Sahu
-              </a>
-            </div>
-            <div className="social-link-logo">
-              <a
-                href="https://www.linkedin.com/in/gajendra-sahu-b24a51227/"
-                rel="noreferrer"
-                target="_blank"
-              >
-                {" "}
-                <img width={25} alt="linkedin logo" src={linkedIn} />{" "}
-              </a>
-              <a
-                href="mailto:gajmain2020@gmail.com"
-                rel="noreferrer"
-                target="_blank"
-              >
-                {" "}
-                <img width={25} alt="gmail logo" src={gmail} />{" "}
-              </a>
-              <a
-                href="https://github.com/Gajmain2020"
-                rel="noreferrer"
-                target="_blank"
-              >
-                {" "}
-                <img width={25} alt="github logo" src={github} />{" "}
-              </a>
-              <a
-                href="https://www.instagram.com/g_a_j.j_u/"
-                rel="noreferrer"
-                target="_blank"
-              >
-                {" "}
-                <img width={25} alt="instagram logo" src={instagram} />{" "}
-              </a>
-            </div>
-          </div>
-        </div> */}
-        </>
       </Container>
     </>
   );

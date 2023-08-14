@@ -7,10 +7,10 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { publishNewExamForm } from "../../../../services/exam";
+import { publishNewBacklogExamForm } from "../../../../services/exam";
 
-export default function ReleaseExamForm() {
-  const examNameOptions = ["ESE B.Tech."];
+export default function ReleaseBacklogForm() {
+  const examNameOptions = ["ESE B.Tech. Backlog"];
   const examSessionOption = ["Jan-July", "July-Dec"];
   const semester = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
   const [examSessionYearOption, setExamSessionYearOption] = useState([]);
@@ -23,12 +23,11 @@ export default function ReleaseExamForm() {
     examSemester: "",
     examSession: "",
     password: "",
-    examType: "regular",
+    examType: "backlog",
   });
 
   useEffect(() => {
-    document.title = "Exam Form Release";
-
+    document.title = "Backlog Exam Form Release";
     const temp = [];
     const currDate = String(new Date());
     for (let i = 0; i < 5; i++) {
@@ -49,7 +48,7 @@ export default function ReleaseExamForm() {
       alert("Please Enter Password To Proceed Further.");
       return;
     }
-    publishNewExamForm(newExamForm)
+    publishNewBacklogExamForm(newExamForm)
       .then((res) => {
         if (!res.successful) {
           alert(res.message);
@@ -71,7 +70,7 @@ export default function ReleaseExamForm() {
   return (
     <Container>
       <div className="homepage">
-        <div className="heading">Release Exam Form</div>
+        <div className="heading">Release Backlog Exam Form</div>
         <div className="button-container"></div>
 
         <>

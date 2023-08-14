@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = "http://localhost:5000/admin/announcements/";
+const URL = "http://localhost:3001/admin/announcements/";
 
 const headers = {
   "Content-Type": "application/json",

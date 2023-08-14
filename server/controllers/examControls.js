@@ -1,6 +1,7 @@
 import Admin from "../models/admin.js";
 import bcrypt from "bcryptjs";
 import Exams from "../models/exams.js";
+import multer from "multer";
 
 export const newExamFormRelease = async (req, res) => {
   try {
@@ -17,6 +18,7 @@ export const newExamFormRelease = async (req, res) => {
       examSession: examData.examSession,
       examYear: examData.examYear,
       examSemester: examData.examSemester,
+      examType: examData.examType,
     });
     if (alreadyFormReleased) {
       return res.status(409).json({
@@ -41,6 +43,7 @@ export const newExamFormRelease = async (req, res) => {
       examSemester: examData.examSemester,
       creatorId: examData.userId,
       creatorName: admin.name,
+      examType: examData.examType,
     });
 
     return res.status(200).json({
@@ -94,4 +97,29 @@ export const searchExamForm = async (req, res) => {
       .status(500)
       .json({ message: "Something went wrong.", successful: "false" });
   }
+};
+
+export const publishExamTimeTable = async (req, res) => {
+  try {
+    const { examSlots, exam } = { ...req.body };
+
+    const examDB = await Exams.findById(exam._id);
+
+    examDB.examTimeTable = examSlots;
+    examDB.save();
+
+    return res.status(200).json({
+      message: "Time Table For Exam Published Succefully.",
+      successful: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong. Please Try Again.",
+      successful: false,
+    });
+  }
+};
+
+export const uploadPYQ = async (req, res) => {
+  console.log("hello");
 };

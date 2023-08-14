@@ -37,7 +37,7 @@ export default function ExamAdmin({ id }) {
           </Button>
           <Button
             variant="contained"
-            onClick={() => alert("work pending here")}
+            onClick={() => navigate(`/admin/Exam/release-backlog-form/${id}`)}
             fullWidth
             size="small"
           >
@@ -65,7 +65,7 @@ export default function ExamAdmin({ id }) {
         <div className="button-row">
           <Button
             variant="contained"
-            onClick={() => alert("work pending here")}
+            onClick={() => navigate(`/admin/Exam/upload-pyq/${id}`)}
             fullWidth
             size="small"
           >

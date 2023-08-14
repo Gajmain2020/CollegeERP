@@ -4,7 +4,7 @@ export function sayHello() {
   alert("hello world!");
 }
 
-const URL = "http://localhost:5000/student/";
+const URL = "http://localhost:3001/student/";
 
 export async function addIndividualStudent(studentData) {
   try {

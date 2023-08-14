@@ -9,6 +9,9 @@ const examsSchema = mongoose.Schema({
   examSemester: reqString,
   creatorId: reqString,
   creatorName: reqString,
+  examType: reqString,
+  formOpen: Boolean,
+  examTimeTable: [{ examPriority: String, examDate: Date, examTime: String }],
   createdOn: { type: Date, defaultValue: new Date() },
 });
 
