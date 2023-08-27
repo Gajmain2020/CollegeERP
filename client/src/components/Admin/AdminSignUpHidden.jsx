@@ -10,6 +10,7 @@ export default function AdminSignUpHidden() {
     "Announcements",
     "Exam",
     "Accounts",
+    "Academics",
     "CSE",
     "CIVIL",
     "EE",

@@ -15,10 +15,12 @@ const storage = multer.diskStorage({
     cb(null, "uploads");
   },
   filename: function (req, file, cb) {
-    cb(null, "" + Date.now() + file.originalname);
+    cb(null, file.originalname);
   },
 });
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+});
 
 router.get("/search-exam-form", searchExamForm);
 router.post("/upload-pyq-pdf", upload.single("file"), uploadPYQ);

@@ -2,6 +2,7 @@ import Admin from "../models/admin.js";
 import bcrypt from "bcryptjs";
 import Exams from "../models/exams.js";
 import multer from "multer";
+import pyq from "../models/pyq.js";
 
 export const newExamFormRelease = async (req, res) => {
   try {
@@ -121,5 +122,38 @@ export const publishExamTimeTable = async (req, res) => {
 };
 
 export const uploadPYQ = async (req, res) => {
-  console.log("hello");
+  try {
+    const pyqAvailable = await pyq.findOne({
+      fileName: req.file.originalname,
+      subjectCode: req.file.originalname.split("_")[0],
+      examYear: req.file.originalname.split("_")[2].split(".")[0],
+    });
+    if (!pyqAvailable) {
+      pyq.create({
+        fileName: req.file.originalname,
+        examYear: req.file.originalname.split("_")[2].split(".")[0],
+        subjectCode: req.file.originalname.split("_")[0],
+        filePath: req.file.path,
+      });
+      return res
+        .status(200)
+        .json({ message: "PDF uploaded successfully.", successful: true });
+    }
+
+    pyqAvailable.updatedAt = new Date();
+    pyqAvailable.fileName = req.file.originalname;
+    pyqAvailable.examYear = req.file.originalname.split("_")[2].split(".")[0];
+    pyqAvailable.subjectCode = req.file.originalname.split("_")[0];
+    pyqAvailable.filePath = req.file.path;
+    pyqAvailable.save();
+    return res
+      .status(200)
+      .json({ message: "PDF uploaded successfully.", successful: true });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Something went wrong. Please Try Again",
+      successful: false,
+    });
+  }
 };

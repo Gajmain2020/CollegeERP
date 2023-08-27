@@ -1,50 +1,75 @@
-import { Alert, Backdrop, Button, MenuItem, TextField } from "@mui/material";
+import {
+  Alert,
+  Backdrop,
+  Button,
+  CircularProgress,
+  MenuItem,
+  TextField,
+} from "@mui/material";
 import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import Papa from "papaparse";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { addIndividualStudent } from "../../../services/student";
+import {
+  addIndividualStudent,
+  addStudentsByCSV,
+} from "../../../../services/student";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function StudentManagement() {
   document.title = "Student Management";
+
+  const baseUrl = useLocation().pathname;
+
+  const id = baseUrl.split("/")[3];
+
+  const navigate = useNavigate();
   const [openAddNewStudentBackdrop, setOpenAddNewStudentBackdrop] =
     useState(false);
   const [openAddStudentsCSV, setOpenAddStudentsCSV] = useState(false);
-  const semesterOptions = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  const departmentOption = ["CSE", "CIVIL", "EE", "EEE", "ETC", "IT", "MECH"];
+  const semesterOptions = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
   const initialState = {
     name: "",
     email: "",
-    rollNo: "",
+    rollNumber: "",
     semester: "",
     section: "",
+    department: "",
   };
   const [newStudentData, setNewStudentData] = useState(initialState);
-  const [fileName, setFileName] = useState("No File Selected");
+  const [fileName, setFileName] = useState("No File Selected...");
   const [hideSaveButton, setHideSaveButton] = useState(true);
   const [disableSubmitButton, setDisableSubmitButton] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [file, setFile] = useState(null);
+  const [students, setStudents] = useState([]);
+  const [apiCalled, setApiCalled] = useState(false);
 
   function handleCloseBackdrop() {
     setOpenAddNewStudentBackdrop(false);
+    setNewStudentData(initialState);
     setOpenAddStudentsCSV(false);
   }
 
   function handleAddNewStudent() {
     setDisableSubmitButton(true);
     //before calling put conditions to check for the data
-    const { name, email, rollNo, semester, section } = newStudentData;
+    const { name, email, rollNumber, semester, section, department } =
+      newStudentData;
     if (
       name === "" ||
       email === "" ||
-      rollNo === "" ||
+      rollNumber === "" ||
       semester === "" ||
-      section === ""
+      section === "" ||
+      department === ""
     ) {
       setErrorMessage("All Fields Are Mandatory To Be Filled Up !!");
       setDisableSubmitButton(false);
       return;
     }
-    if (rollNo.length < 12) {
+    if (rollNumber.length < 12) {
       setErrorMessage("Check The Roll Number !!");
       setDisableSubmitButton(false);
       return;
@@ -73,16 +98,19 @@ export default function StudentManagement() {
   }
 
   function handleFileUpload(e) {
+    setFile(e.target.files[0]);
+
     if (e.target.files.length > 0) {
       setFileName(e.target.files[0].name);
-      console.log(fileName);
       setHideSaveButton(false);
     }
-    Papa.parse(e.target.files[0], {
+  }
+
+  function handleCSVProcessing(e) {
+    Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
       complete: function (res) {
-        console.log(res);
         const columnArray = [];
         const valueArray = [];
 
@@ -91,15 +119,38 @@ export default function StudentManagement() {
           valueArray.push(Object.values(d));
         });
 
-        //need to set this data to useState for further processing
-        // setDisableSubmitButton(() => false);
+        setStudents(res.data);
       },
     });
   }
 
-  function handleUnloadFile() {
-    setFileName("No File Selected");
+  function handleViewData() {
+    const encodedData = encodeURIComponent(JSON.stringify(students));
+    const url = `http://localhost:3000/show-data/students/${encodedData}`;
+    window.open(url, "_blank", "width=800 height=600");
+  }
+
+  function handleUnloadFile(e) {
+    setFile(null);
+    setStudents([]);
+    setFileName("No File Selected...");
     setHideSaveButton(true);
+  }
+
+  function addMultipleStudents() {
+    setApiCalled(true);
+    addStudentsByCSV(students).then((res) => {
+      setApiCalled(false);
+      if (res.successful === false) {
+        alert(res.message);
+        return;
+      }
+      alert(res.message);
+      setFile(null);
+      setOpenAddStudentsCSV(false);
+      navigate(`/admin/Academics/${id}/student-management`);
+      return;
+    });
   }
 
   return (
@@ -125,19 +176,18 @@ export default function StudentManagement() {
           </Button>
         </div>
         <div className="button-row">
-          <Button variant="contained" fullWidth size="small">
-            Edit Student Details
+          <Button
+            variant="contained"
+            fullWidth
+            size="small"
+            onClick={() => {
+              navigate(`${baseUrl}/edit-delete-students`);
+            }}
+          >
+            Edit / Delete Students
           </Button>
           <Button variant="contained" fullWidth size="small">
             View Marks
-          </Button>
-        </div>
-        <div className="button-row">
-          <Button variant="contained" fullWidth size="small">
-            View All Students
-          </Button>
-          <Button variant="contained" fullWidth size="small">
-            Delete Students
           </Button>
         </div>
       </div>
@@ -187,9 +237,9 @@ export default function StudentManagement() {
               <TextField
                 onChange={handleAddStudentDataChange}
                 label="Roll Number"
-                name="rollNo"
+                name="rollNumber"
                 fullWidth
-                value={newStudentData.rollNo}
+                value={newStudentData.rollNumber}
               />
 
               <TextField
@@ -218,6 +268,21 @@ export default function StudentManagement() {
               >
                 <MenuItem value="A">A</MenuItem>
                 <MenuItem value="B">B</MenuItem>
+              </TextField>
+              <TextField
+                onChange={handleAddStudentDataChange}
+                select
+                label="Select Department"
+                defaultValue=""
+                helperText="Please select department"
+                name="department"
+                value={newStudentData.department}
+              >
+                {departmentOption.map((dept) => (
+                  <MenuItem value={dept} key={dept}>
+                    {dept}
+                  </MenuItem>
+                ))}
               </TextField>
               <Button
                 onClick={handleAddNewStudent}
@@ -261,14 +326,18 @@ export default function StudentManagement() {
           <div className="backdrop-options">
             <div className="backdrop-options-column">
               <div className="password">
-                <TextField fullWidth value={fileName} />
-                {fileName !== "No File Selected" && (
+                <TextField
+                  fullWidth
+                  value={fileName}
+                  disabled
+                  sx={{ backgroundColor: "#D5FFD0" }}
+                />
+                {fileName !== "No File Selected..." && (
                   <>
                     <Button
                       onClick={handleUnloadFile}
                       variant="contained"
                       color="error"
-                      size="large"
                     >
                       <DeleteIcon fontSize="large" />
                     </Button>
@@ -276,25 +345,56 @@ export default function StudentManagement() {
                 )}
               </div>
 
-              <Button variant="contained" component="label">
-                Upload File
-                <input
-                  onChange={handleFileUpload}
-                  type="file"
-                  accept=".csv"
-                  hidden
-                />
-              </Button>
+              {fileName === "No File Selected..." && (
+                <Button variant="contained" component="label">
+                  Upload File
+                  <input
+                    onChange={handleFileUpload}
+                    type="file"
+                    accept=".csv"
+                    hidden
+                  />
+                </Button>
+              )}
 
-              {!hideSaveButton && (
+              {!hideSaveButton && students.length === 0 && (
                 <Button
                   variant="contained"
                   fullWidth
                   color="success"
                   size="large"
+                  onClick={handleCSVProcessing}
                 >
-                  Proceed
+                  Process CSV File
                 </Button>
+              )}
+              {!hideSaveButton && students.length !== 0 && (
+                <div className="row">
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    color="warning"
+                    onClick={handleViewData}
+                  >
+                    View Processed Data
+                  </Button>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    color="success"
+                    size="large"
+                    onClick={addMultipleStudents}
+                    disabled={apiCalled}
+                  >
+                    {apiCalled ? (
+                      <>
+                        <CircularProgress color="inherit" size={30} />
+                      </>
+                    ) : (
+                      "Add Students"
+                    )}
+                  </Button>
+                </div>
               )}
             </div>
           </div>

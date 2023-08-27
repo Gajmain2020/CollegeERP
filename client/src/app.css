@@ -279,7 +279,7 @@ h6 {
   background-color: rgba(238, 238, 238, 0.889);
   max-width: 60em;
   margin: 2em;
-  padding: 1em 2em;
+  padding: 0.75em 2em;
   border-radius: 1em;
   display: flex;
   flex-direction: column;
@@ -291,13 +291,14 @@ h6 {
 }
 .backdrop-element .backdrop-options {
   display: flex;
-  gap: 1.5em;
+  gap: 1.25em;
   padding: 1em;
+  flex-direction: column;
 }
 .backdrop-element .backdrop-options-column {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 0.5em;
   margin-top: 1em;
   width: 40em;
   padding: 0.5em;
@@ -337,8 +338,9 @@ input::-webkit-inner-spin-button {
 }
 
 .message {
-  font-size: 18px;
+  font-size: 1.25em;
   margin-bottom: 10px;
+  color: rgb(54, 54, 54);
 }
 
 .timer {
@@ -373,8 +375,8 @@ input::-webkit-inner-spin-button {
   min-height: 350px;
 }
 
-.edit-book-container .search-component {
-  padding: 0.5em 2em;
+.search-component {
+  padding: 0.75em 2em;
   display: flex;
   gap: 1em;
   flex-wrap: wrap;
@@ -385,11 +387,19 @@ input::-webkit-inner-spin-button {
   justify-content: center;
   align-items: center;
   gap: 0.5em;
+  margin: 1em;
 }
 .pages-button button {
   border-radius: 50px !important;
 }
 .pages-button .next-prev {
+  outline: 2px solid rgb(122, 122, 122);
+  border-radius: 50px;
+}
+.pages-button .next-prev:disabled {
+  background-color: gray;
+  color: white;
+  opacity: 0.5;
   outline: 2px solid rgb(122, 122, 122);
   border-radius: 50px;
 }
@@ -491,6 +501,19 @@ input::-webkit-inner-spin-button {
   color: white;
 }
 
+.backdrop-element .backdrop-heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  color: #474747;
+  border: transparent;
+  border-bottom: solid 2px #0f102b;
+  border-style: dashed;
+  font-weight: 500;
+  font-family: "open sans", "Montserrat";
+}
+
 .modal-close-button {
   display: flex;
   justify-content: flex-end;
@@ -587,6 +610,8 @@ input::-webkit-inner-spin-button {
   display: flex;
   flex-direction: column;
   gap: 1em;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .container .form-container .row {
@@ -682,7 +707,6 @@ input::-webkit-inner-spin-button {
   outline: solid 1px blue;
 }
 .outline-effect.MuiButton-outlined:hover {
-  color: rgb(230, 52, 52);
   outline: solid blue 1px;
   background-color: rgb(168, 168, 168);
   color: white;
@@ -735,4 +759,26 @@ input::-webkit-inner-spin-button {
 .info .info-text {
   color: rgba(35, 34, 34, 0.836);
   font-family: "Open Sans", "Helvetica Neue";
+}
+
+.MuiTableRow-root.table-hover-effect {
+  height: 1em;
+  transition: height 300ms ease-in;
+}
+
+.MuiTableRow-root.table-hover-effect:hover {
+  height: 2.5em;
+  background-color: #b9b4c760;
+  border-radius: 1em;
+}
+
+.filters-component {
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+.filters-component .filters {
+  padding: 1em 2em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

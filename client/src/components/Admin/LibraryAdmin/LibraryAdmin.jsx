@@ -8,11 +8,11 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { addMultipleBooks, addSingleBook } from "../../services/library";
+import { addMultipleBooks, addSingleBook } from "../../../services/library";
 import { useNavigate } from "react-router-dom";
 import Papa from "papaparse";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { decodeToken } from "../../services/common";
+import { decodeToken } from "../../../services/common";
 
 export default function LibraryAdmin({ id }) {
   const navigate = useNavigate();

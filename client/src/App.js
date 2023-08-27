@@ -11,9 +11,8 @@ import ReportComplaint from "./components/ReportComplaint/ReportComplaint";
 
 import AdminHomepage from "./components/Admin/AdminHomepage";
 import DepartmentAdmin from "./components/Admin/DepartmentAdmin";
-import StudentManagement from "./components/Admin/Student Management/StudentManagement";
+import StudentManagement from "./components/Admin/AcademicsAdmin/Helper/StudentManagement";
 import AdminSignUpHidden from "./components/Admin/AdminSignUpHidden";
-import AdminProfile from "./components/Admin/AdminProfile";
 import NotLoggedIn from "./components/NotLoggedIn/NotLoggedIn";
 import ShowData from "./components/ShowData/ShowData";
 import EditBooks from "./components/Admin/LibraryAdmin/EditBooks";
@@ -25,6 +24,10 @@ import ReleaseTImeTable from "./components/Admin/ExamAdmin/Helper/ReleaseTImeTab
 import ReleaseBacklogForm from "./components/Admin/ExamAdmin/Helper/ReleaseBacklogForm";
 import PageNotFound from "./components/PageNotFound";
 import UploadPYQ from "./components/Admin/ExamAdmin/Helper/UploadPYQ";
+import ReleaseFeeNotice from "./components/Admin/AccountsAdmin/helper/ReleaseFeeNotice";
+import RemainderToStudent from "./components/Admin/AccountsAdmin/helper/RemainderToStudent";
+import ShowDataStudents from "./components/ShowData/ShowDataStudents";
+import EditDeleteStudents from "./components/Admin/AcademicsAdmin/Helper/EditDeleteStudents";
 
 export default function App() {
   return (
@@ -37,7 +40,6 @@ export default function App() {
             <Route path="signUp" element={<AdminSignUpHidden />} />
             <Route path=":id" element={<AdminHomepage />} />
             <Route path=":department">
-              <Route path="profile/:id" element={<AdminProfile />} />
               <Route path=":id" element={<DepartmentAdmin />} />
               <Route path="edit-books/:id" element={<EditBooks />} />
               <Route path="issue-books/:id" element={<IssueBook />} />
@@ -46,14 +48,25 @@ export default function App() {
               <Route path="time-table/:id" element={<ReleaseTImeTable />} />
               <Route path="upload-pyq/:id" element={<UploadPYQ />} />
               <Route
+                path="release-fee-payment-notice/:id"
+                element={<ReleaseFeeNotice />}
+              />
+              <Route
+                path="send-fee-payment-remainder/:id"
+                element={<RemainderToStudent />}
+              />
+              <Route
                 path="release-backlog-form/:id"
                 element={<ReleaseBacklogForm />}
               />
 
-              <Route
-                path=":id/student-management"
-                element={<StudentManagement />}
-              />
+              <Route path=":id/student-management">
+                <Route path="" element={<StudentManagement />} />
+                <Route
+                  path="edit-delete-students"
+                  element={<EditDeleteStudents />}
+                />
+              </Route>
               <Route
                 path=":id/faculty-management"
                 element={<>Need to work bro</>}
@@ -79,6 +92,10 @@ export default function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/not-logged-in" element={<NotLoggedIn />} />
           <Route path="/show-data/library/:data" element={<ShowData />} />
+          <Route
+            path="/show-data/students/:data"
+            element={<ShowDataStudents />}
+          />
           <Route
             path="/show-data/library/issue-history/:data"
             element={<ShowDataIssueHistory />}

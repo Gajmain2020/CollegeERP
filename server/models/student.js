@@ -8,7 +8,15 @@ const studentSchema = mongoose.Schema({
   password: reqString,
   semester: reqString,
   department: reqString,
-  rollNo: reqString,
+  rollNumber: reqString,
+
+  notification: [
+    {
+      noticeNumber: String,
+      noticeSubject: String,
+      seen: Boolean,
+    },
+  ],
 
   createdAt: {
     type: Date,
