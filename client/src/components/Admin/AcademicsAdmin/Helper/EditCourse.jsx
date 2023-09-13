@@ -1,68 +1,69 @@
+import { useEffect, useState } from "react";
 import {
-  Backdrop,
-  Button,
-  Checkbox,
-  MenuItem,
+  deleteSingleCourse,
+  getAllCourse,
+  updateSingleCourse,
+} from "../../../../services/department";
+import {
   Paper,
   Skeleton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
+  Button,
+  MenuItem,
+  TableCell,
+  TableRow,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  Backdrop,
   Typography,
 } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteForeverTwoToneIcon from "@mui/icons-material/DeleteForeverTwoTone";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { useEffect, useState } from "react";
-import {
-  deleteMultipleStudents,
-  deleteSingleStudent,
-  getAllStudents,
-  updateMultipleStudent,
-  updateSingleStudent,
-} from "../../../../services/student";
-
-export default function EditDeleteStudents() {
-  const [studentsFromDB, setStudentsFromDB] = useState([]);
-  const [allStudents, setAllStudents] = useState([]);
+export default function EditCourse() {
+  const itemsPerPage = 20;
   const semester = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
   const department = ["", "CSE", "CIVIL", "EE", "EEE", "ETC", "IT", "MECH"];
-  const [students, setStudents] = useState([]);
+  const [coursesFromDB, setCoursesFromDB] = useState([]);
+  const [allCourses, setAllCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(25);
+  const [courses, setCourses] = useState([]);
   const [searchData, setSearchData] = useState({
-    name: "",
-    rollNumber: "",
-    semester: "",
+    courseName: "",
     department: "",
-  });
-  const [selectedStudents, setSelectedStudents] = useState([]);
-  const [selectAll, setSelectAll] = useState([]);
-  const [multipleStudentAction, setMultipleStudentAction] = useState(0);
-  const [singleStudentAction, setSingleStudentAction] = useState(0);
-  const [apiCalled, setApiCalled] = useState(false);
-  const [editStudent, setEditStudent] = useState(null);
-  const [modifiedStudentData, setModifiedStudentData] = useState(null);
-  const [bulkUpdate, setBulkUpdate] = useState({
+    courseCode: "",
     semester: "",
-    department: "",
+    courseType: "",
   });
 
+  const [apiCalled, setApiCalled] = useState(false);
+  const [singleCourseAction, setSingleCourseAction] = useState(0);
+  const [editCourse, setEditCourse] = useState(null);
+  const [modifiedEditCourse, setModifiedEditCourse] = useState(null);
+
   useEffect(() => {
-    if (studentsFromDB.length === 0) {
-      getAllStudents().then((res) => {
+    document.title = "Edit Course";
+
+    if (coursesFromDB.length === 0) {
+      getAllCourse().then((res) => {
         if (res.successful === false) {
           alert(res.message);
           return;
         }
-        setStudentsFromDB(res.students);
-        setAllStudents(res.students);
+
+        const pushThis = [];
+        for (let i = 0; i < res.course.length; i++) {
+          res.course[i].courses.map((c) => {
+            pushThis.push({ ...c, department: res.course[i].department });
+          });
+        }
+
+        setCoursesFromDB((prev) => [...pushThis]);
+        setAllCourses((prev) => [...pushThis]);
         setCurrentPage(1);
       });
     }
@@ -70,21 +71,20 @@ export default function EditDeleteStudents() {
   }, []);
 
   useEffect(() => {
-    if (allStudents !== []) {
-      setTotalPages(Math.ceil(allStudents.length / itemsPerPage));
+    if (allCourses !== []) {
+      setTotalPages(Math.ceil(allCourses.length / itemsPerPage));
       const start = itemsPerPage * (currentPage - 1);
-      const end = Math.min(itemsPerPage * currentPage, allStudents.length);
-      setStudents(() => [...allStudents.slice(start, end)]);
+      const end = Math.min(itemsPerPage * currentPage, allCourses.length);
+      setCourses(() => [...allCourses.slice(start, end)]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allStudents, currentPage, totalPages]);
+  }, [allCourses, currentPage, totalPages]);
 
   useEffect(() => {
     handleSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchData]);
 
-  //! UTILITIES FOR PAGINATION BUTTONS
   function handleNextClick() {
     if (currentPage === totalPages) return;
     setCurrentPage((idx) => idx + 1);
@@ -214,6 +214,21 @@ export default function EditDeleteStudents() {
     }
   }
 
+  function handleSearch() {
+    setAllCourses(() =>
+      coursesFromDB.filter(
+        (course) =>
+          course.courseName.includes(searchData.courseName) &&
+          course.courseCode.includes(searchData.courseCode) &&
+          course.department.includes(searchData.department)
+      )
+    );
+    if (searchData.semester !== "") {
+      setAllCourses((prev) =>
+        prev.filter((course) => course.semester === searchData.semester)
+      );
+    }
+  }
   function handleSearchDataChange(e) {
     setSearchData((searchData) => ({
       ...searchData,
@@ -314,197 +329,102 @@ export default function EditDeleteStudents() {
     );
   }
 
-  if (!allStudents || allStudents === []) {
+  if (!allCourses || allCourses === []) {
     return showSkeleton();
   }
 
-  function handleMultipleUpdate() {
-    setApiCalled(true);
-    if (bulkUpdate.semester === "" && bulkUpdate.department === "") {
-      alert("Please provide atleaset one of the fields below to proceed.");
-      setApiCalled(false);
-      return;
-    }
-
-    //*updating in client rendering mode...
-    setStudents((prev) =>
-      prev.map((stu) => {
-        if (selectedStudents.includes(stu)) {
-          stu.semester =
-            bulkUpdate.semester === "" ? stu.semester : bulkUpdate.semester;
-          stu.department =
-            bulkUpdate.department === ""
-              ? stu.department
-              : bulkUpdate.department;
-
-          return stu;
-        }
-        return stu;
-      })
-    );
-
-    //*updating in the server
-    updateMultipleStudent(selectedStudents, bulkUpdate).then((res) => {
-      setApiCalled(false);
-      if (!res.successful) {
-        alert(res.message);
-        return;
-      }
-      alert(res.message);
-      setSelectedStudents([]);
-      setBulkUpdate({
-        department: "",
-        semester: "",
-      });
-      setMultipleStudentAction(0);
-    });
+  function handleCloseBackdrop() {
+    setSingleCourseAction(0);
+    setEditCourse(null);
+    setModifiedEditCourse(null);
   }
 
-  function handleMutipleDelete() {
-    setApiCalled(true);
-    setAllStudents((prev) =>
-      prev.filter((stu) => !selectedStudents.includes(stu))
-    );
-    deleteMultipleStudents(selectedStudents)
-      .then((res) => {
-        setApiCalled(false);
-        if (!res.successful) {
-          alert(res.message);
-          return;
-        }
-        alert(res.message);
-        setSelectedStudents([]);
-        setBulkUpdate({
-          department: "",
-          semester: "",
-        });
-        setMultipleStudentAction(0);
-      })
-      .catch((err) => alert(err.message));
-  }
-
-  function handleSingleStudentDelete() {
-    setApiCalled(true);
-    setAllStudents((prev) =>
-      prev.filter(
-        (stu) =>
-          stu.email !== editStudent.email &&
-          stu.rollNumber !== editStudent.rollNumber
-      )
-    );
-    deleteSingleStudent(editStudent)
-      .then((res) => {
-        setApiCalled(false);
-        if (!res.successful) {
-          alert(res.message);
-          return;
-        }
-        alert(res.message);
-        handleCloseBackdrop();
-      })
-      .catch((err) => {
-        alert(err.message);
-        setApiCalled(false);
-        return;
-      });
-  }
-  function handleSingleStudentEdit() {
-    //!checking if any thing is changed or not...
-    if (editStudent === modifiedStudentData) {
+  function handleSingleCourseEdit() {
+    if (editCourse === modifiedEditCourse) {
       const userResponse = window.confirm(
-        "No changes in student data detcted. Close the backdrop ?"
+        "No changes in course data detcted. Close the backdrop?"
       );
       if (userResponse === true) {
         handleCloseBackdrop();
         return;
       }
     }
+    setApiCalled(true);
+    updateSingleCourse(editCourse, modifiedEditCourse).then((res) => {
+      setApiCalled(false);
+      if (res.successful === false) {
+        alert(res.message);
+        return;
+      }
+      alert(res.message);
+      setApiCalled(false);
+      courses[courses.indexOf(editCourse)] = modifiedEditCourse;
+      handleCloseBackdrop();
+    });
+  }
 
-    //! updathing the backend or server side...
-    updateSingleStudent(editStudent, modifiedStudentData)
+  function handleSingleCourseDelete() {
+    setApiCalled(true);
+    setAllCourses((prev) =>
+      prev.filter((cou) => editCourse.courseCode !== cou.courseCode)
+    );
+    deleteSingleCourse(editCourse)
       .then((res) => {
         setApiCalled(false);
-        if (!res.successful) {
+        if (res.successful === false) {
           alert(res.message);
           return;
         }
         alert(res.message);
-        //*changeing data in frontend side...
-        students[students.indexOf(editStudent)] = modifiedStudentData;
         handleCloseBackdrop();
+        return;
       })
-      .catch((err) => {
-        alert(err.message);
-      });
-  }
-
-  function handleSearch() {
-    setAllStudents(() =>
-      studentsFromDB.filter(
-        (student) =>
-          student.name.includes(searchData.name) &&
-          student.rollNumber.includes(searchData.rollNumber) &&
-          student.department.includes(searchData.department)
-      )
-    );
-    if (searchData.semester !== "") {
-      setAllStudents((prev) =>
-        prev.filter((student) => student.semester === searchData.semester)
-      );
-    }
-  }
-
-  function handleCloseBackdrop() {
-    setMultipleStudentAction(0);
-    setSingleStudentAction(0);
-    setEditStudent(null);
-    setBulkUpdate({
-      semester: "",
-      department: "",
-    });
+      .catch((err) => alert(err.message));
   }
 
   return (
     <>
       <div className="homepage">
-        <div className="heading">See/Edit/Delete Student(s) </div>
+        <div className="heading">Edit Course(s)</div>
         <div className="search-container">
           <Paper
-            sx={{ width: "100%", height: "100%" }}
+            sx={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}
             className="search-component"
             elevation={6}
           >
-            <div style={{ width: "100%" }} className="container">
+            <div className="container" sx={{ width: "100%" }}>
               <div
                 className="form-container"
                 style={{
                   padding: "0.5em 0.75em 0 0.75em",
                 }}
               >
-                <div style={{ gap: "0.75em" }} className="row">
+                <div style={{ gap: "1em" }} className="row">
                   <TextField
                     fullWidth
-                    label="Name"
-                    name="name"
+                    label="Course Name"
+                    name="courseName"
                     onChange={handleSearchDataChange}
-                    value={searchData?.name}
+                    value={searchData?.courseName}
                   />
                   <TextField
                     fullWidth
-                    type="number"
-                    label="Roll Number"
-                    name="rollNumber"
+                    label="Course Code"
+                    name="courseCode"
                     onChange={handleSearchDataChange}
-                    value={searchData?.rollNumber}
+                    value={searchData?.courseCode}
                   />
                   <TextField
                     name="semester"
                     select
                     label="Semester"
+                    fullWidth
                     helperText="Please select semester."
-                    sx={{
-                      width: "60%",
-                    }}
                     onChange={handleSearchDataChange}
                     value={searchData?.semester}
                   >
@@ -520,9 +440,7 @@ export default function EditDeleteStudents() {
                     select
                     label="Department"
                     helperText="Please select department."
-                    sx={{
-                      width: "70%",
-                    }}
+                    fullWidth
                     onChange={handleSearchDataChange}
                     value={searchData?.department}
                   >
@@ -534,29 +452,17 @@ export default function EditDeleteStudents() {
                   </TextField>
                   <Button
                     sx={{
-                      marginTop: "7px",
-                      padding: "0.5em 1em",
-                      width: "30%",
-                    }}
-                    variant="outlined"
-                    onClick={handleSearch}
-                    color="success"
-                  >
-                    Search
-                  </Button>
-                  <Button
-                    sx={{
                       marginTop: "0.8em",
                       padding: "0.25em 0.5em",
-                      width: "20%",
                     }}
                     variant="outlined"
                     onClick={() => {
                       setSearchData(() => ({
-                        name: "",
+                        courseName: "",
+                        courseType: "",
                         semester: "",
                         department: "",
-                        rollNumber: "",
+                        courseCode: "",
                       }));
                       handleSearch();
                     }}
@@ -570,117 +476,33 @@ export default function EditDeleteStudents() {
             </div>
           </Paper>
         </div>
-
         <div className="table">
           <TableContainer component={Paper}>
             <Table size="small" sx={{ minWidth: 650 }}>
               <TableHead>
-                {selectedStudents.length !== 0 && (
-                  <>
-                    <TableRow sx={{ backgroundColor: " #9EB384" }}>
-                      <TableCell colSpan={6} rowSpan={2}>
-                        {`${selectedStudents.length} Student${
-                          selectedStudents.length === 1 ? "" : "s"
-                        } selected.`}
-                      </TableCell>
-                      <TableCell>Edit</TableCell>
-                      <TableCell>Delete</TableCell>
-                    </TableRow>
-                    <TableRow sx={{ backgroundColor: " #9EB384" }}>
-                      <TableCell sx={{ width: "10%" }}>
-                        <Button
-                          color="warning"
-                          size="small"
-                          variant="outlined"
-                          onClick={() => {
-                            setMultipleStudentAction(1);
-                          }}
-                        >
-                          <EditTwoToneIcon />
-                        </Button>
-                      </TableCell>
-                      <TableCell sx={{ width: "10%" }}>
-                        <Button
-                          color="error"
-                          size="small"
-                          variant="contained"
-                          onClick={() => {
-                            setMultipleStudentAction(2);
-                          }}
-                        >
-                          <DeleteForeverTwoToneIcon />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  </>
-                )}
                 <TableRow sx={{ backgroundColor: " #9EB384", height: "3em" }}>
-                  <TableCell sx={{ width: "12%" }}>
-                    <Checkbox
-                      id="selectMultiple"
-                      checked={selectAll.includes(currentPage)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          if (!selectAll.includes(currentPage)) {
-                            setSelectAll((prev) => [...prev, currentPage]);
-                          }
-
-                          setSelectedStudents((s) => [
-                            ...new Set([...s, ...students]),
-                          ]);
-                        }
-                        if (!e.target.checked) {
-                          setSelectAll(
-                            selectAll.filter((s) => s !== currentPage)
-                          );
-                        }
-                      }}
-                      size="small"
-                    />
-                    Select
-                  </TableCell>
                   <TableCell sx={{ width: "10%" }}>S. No.</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Roll Number</TableCell>
-                  <TableCell>Email</TableCell>
+                  <TableCell>Course Name</TableCell>
+                  <TableCell>Course Code</TableCell>
                   <TableCell>Semester</TableCell>
                   <TableCell>Department</TableCell>
+                  <TableCell>Course Type</TableCell>
                   <TableCell>Edit/Delete</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {students.length !== 0 ? (
-                  students.map((student, idx) => {
+                {courses.length !== 0 ? (
+                  courses.map((course, idx) => {
                     return (
-                      <TableRow
-                        key={student.rollNumber}
-                        className="table-hover-effect"
-                      >
-                        <TableCell>
-                          <Checkbox
-                            size="small"
-                            checked={selectedStudents.includes(student)}
-                            onClick={(e) => {
-                              if (e.target.checked) {
-                                setSelectedStudents((stu) => [...stu, student]);
-                              } else {
-                                setSelectedStudents((stu) =>
-                                  stu.filter(
-                                    (s) => s.rollNumber !== student.rollNumber
-                                  )
-                                );
-                              }
-                            }}
-                          />
-                        </TableCell>
+                      <TableRow key={idx} className="table-hover-effect">
                         <TableCell>
                           {(currentPage - 1) * itemsPerPage + idx + 1}
                         </TableCell>
-                        <TableCell>{student.name}</TableCell>
-                        <TableCell>{student.rollNumber}</TableCell>
-                        <TableCell>{student.email}</TableCell>
-                        <TableCell>{student.semester}</TableCell>
-                        <TableCell>{student.department}</TableCell>
+                        <TableCell>{course.courseName}</TableCell>
+                        <TableCell>{course.courseCode}</TableCell>
+                        <TableCell>{course.semester}</TableCell>
+                        <TableCell>{course.department}</TableCell>
+                        <TableCell>{course.courseType}</TableCell>
                         <TableCell sx={{ width: "15%" }}>
                           <div className="row">
                             <Button
@@ -688,9 +510,9 @@ export default function EditDeleteStudents() {
                               size="small"
                               variant="outlined"
                               onClick={() => {
-                                setEditStudent(() => student);
-                                setModifiedStudentData(() => student);
-                                setSingleStudentAction(1);
+                                setEditCourse(course);
+                                setModifiedEditCourse(course);
+                                setSingleCourseAction(1);
                               }}
                             >
                               <EditTwoToneIcon />
@@ -700,9 +522,9 @@ export default function EditDeleteStudents() {
                               size="small"
                               variant="contained"
                               onClick={() => {
-                                setEditStudent(() => student);
-                                setModifiedStudentData(() => student);
-                                setSingleStudentAction(2);
+                                setEditCourse(course);
+                                setModifiedEditCourse(course);
+                                setSingleCourseAction(2);
                               }}
                             >
                               <DeleteForeverTwoToneIcon />
@@ -725,7 +547,6 @@ export default function EditDeleteStudents() {
             </Table>
           </TableContainer>
         </div>
-
         {totalPages !== 0 ? (
           <div className="pages-button">
             {totalPages !== 1 && (
@@ -764,129 +585,11 @@ export default function EditDeleteStudents() {
           </center>
         )}
       </div>
-      {/* BACKDROP FOR MULTIPLE STUDENT EDITING AND DELETING  */}
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={multipleStudentAction === 1 || multipleStudentAction === 2}
-      >
-        <div className="backdrop-element">
-          <div className="backdrop-close-btn">
-            <Button
-              variant="contained"
-              color="error"
-              size="small"
-              onClick={handleCloseBackdrop}
-            >
-              <CloseIcon fontSize="large" />
-            </Button>
-          </div>
-          {multipleStudentAction === 1 ? (
-            <div>
-              <div className="backdrop-heading">Edit Multiple Students</div>
-              <div className="backdrop-options-column">
-                <TextField
-                  name="semester"
-                  select
-                  label="Semester"
-                  helperText="Please select semester."
-                  onChange={(e) => {
-                    setBulkUpdate((prev) => ({
-                      ...prev,
-                      [e.target.name]: e.target.value,
-                    }));
-                  }}
-                  value={bulkUpdate?.semester}
-                >
-                  {semester.map((sem, idx) => (
-                    <MenuItem value={sem} key={idx}>
-                      {sem}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  name="department"
-                  select
-                  label="Department"
-                  helperText="Please select department."
-                  onChange={(e) => {
-                    setBulkUpdate((prev) => ({
-                      ...prev,
-                      [e.target.name]: e.target.value,
-                    }));
-                  }}
-                  value={bulkUpdate?.department}
-                >
-                  {department.map((dept, idx) => (
-                    <MenuItem value={dept} key={idx}>
-                      {dept}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <div className="caption">
-                  Only Semester & Department can be edited for more than one
-                  students.
-                </div>
-                <Button
-                  variant="contained"
-                  color="warning"
-                  onClick={handleMultipleUpdate}
-                  disabled={apiCalled}
-                >
-                  Make Changes
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="warning"
-                  onClick={handleCloseBackdrop}
-                  disabled={apiCalled}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <>
-              <div className="backdrop-options-column">
-                <div className="message">
-                  Are you sure you want to remove {selectedStudents.length}{" "}
-                  student{selectedStudents.length > 1 && "s"} from the database.
-                  <br />
-                  <Typography
-                    sx={{ color: "#252B48" }}
-                    variant="caption"
-                    display="block"
-                    gutterBottom
-                  >
-                    * The changes can not be reverted back. Please check before
-                    making changes.
-                  </Typography>
-                </div>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={handleMutipleDelete}
-                  disabled={apiCalled}
-                >
-                  Delete
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="warning"
-                  onClick={handleCloseBackdrop}
-                  disabled={apiCalled}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-      </Backdrop>
 
-      {/* BACKDROP FOR SINGLE STUDENT EDITING AND DELETING */}
+      {/* BACKDROP FOR SINGLE COURSE EDITING AND DELETING */}
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={singleStudentAction === 1 || singleStudentAction === 2}
+        open={singleCourseAction === 1 || singleCourseAction === 2}
       >
         <div className="backdrop-element">
           <div className="backdrop-close-btn">
@@ -899,38 +602,27 @@ export default function EditDeleteStudents() {
               <CloseIcon fontSize="large" />
             </Button>
           </div>
-          {singleStudentAction === 1 ? (
+          {singleCourseAction === 1 ? (
             <div>
-              <div className="backdrop-heading">Edit Student</div>
+              <div className="backdrop-heading">Edit Course</div>
               <div className="backdrop-options-column">
                 <TextField
-                  label="Name"
-                  name="name"
-                  value={modifiedStudentData.name}
+                  label="Course Name"
+                  name="courseName"
+                  value={modifiedEditCourse.courseName}
                   onChange={(e) => {
-                    setModifiedStudentData((prev) => ({
+                    setModifiedEditCourse((prev) => ({
                       ...prev,
                       [e.target.name]: e.target.value,
                     }));
                   }}
                 />
                 <TextField
-                  label="Email"
-                  name="email"
-                  value={modifiedStudentData.email}
+                  label="Course Code"
+                  name="courseCode"
+                  value={modifiedEditCourse.courseCode}
                   onChange={(e) => {
-                    setModifiedStudentData((prev) => ({
-                      ...prev,
-                      [e.target.name]: e.target.value,
-                    }));
-                  }}
-                />
-                <TextField
-                  label="Roll Number"
-                  name="rollNumber"
-                  value={modifiedStudentData.rollNumber}
-                  onChange={(e) => {
-                    setModifiedStudentData((prev) => ({
+                    setModifiedEditCourse((prev) => ({
                       ...prev,
                       [e.target.name]: e.target.value,
                     }));
@@ -944,12 +636,12 @@ export default function EditDeleteStudents() {
                     helperText="Please select semester."
                     fullWidth
                     onChange={(e) => {
-                      setModifiedStudentData((prev) => ({
+                      setModifiedEditCourse((prev) => ({
                         ...prev,
                         [e.target.name]: e.target.value,
                       }));
                     }}
-                    value={modifiedStudentData.semester}
+                    value={modifiedEditCourse.semester}
                   >
                     {semester.map((sem, idx) => (
                       <MenuItem value={sem} key={idx}>
@@ -958,18 +650,36 @@ export default function EditDeleteStudents() {
                     ))}
                   </TextField>
                   <TextField
+                    name="courseType"
+                    select
+                    label="Course Type"
+                    helperText="Please select course type."
+                    fullWidth
+                    onChange={(e) => {
+                      setModifiedEditCourse((prev) => ({
+                        ...prev,
+                        [e.target.name]: e.target.value,
+                      }));
+                    }}
+                    value={modifiedEditCourse.courseType}
+                  >
+                    <MenuItem value="theory">Theory</MenuItem>
+                    <MenuItem value="lab">Lab.</MenuItem>
+                  </TextField>
+                  <TextField
                     name="department"
+                    disabled
                     select
                     label="Department"
                     helperText="Please select semester."
                     fullWidth
                     onChange={(e) => {
-                      setModifiedStudentData((prev) => ({
+                      setModifiedEditCourse((prev) => ({
                         ...prev,
                         [e.target.name]: e.target.value,
                       }));
                     }}
-                    value={modifiedStudentData.department}
+                    value={modifiedEditCourse.department}
                   >
                     {department.map((dept, idx) => (
                       <MenuItem value={dept} key={idx}>
@@ -991,7 +701,7 @@ export default function EditDeleteStudents() {
                   fullWidth
                   variant="contained"
                   color="success"
-                  onClick={handleSingleStudentEdit}
+                  onClick={handleSingleCourseEdit}
                   disabled={apiCalled}
                 >
                   Make Changes
@@ -1008,12 +718,12 @@ export default function EditDeleteStudents() {
               </div>
             </div>
           ) : (
-            singleStudentAction === 2 && (
+            singleCourseAction === 2 && (
               <>
                 <div className="backdrop-options-column">
                   <div className="message">
-                    Are you sure you want to remove '{editStudent.name}' with
-                    roll number '{editStudent.rollNumber}' from the database.
+                    Are you sure you want to remove '{editCourse.courseName}'
+                    with course id '{editCourse.courseCode}' from the database.
                     <br />
                     <Typography
                       sx={{ color: "#252B48" }}
@@ -1028,7 +738,7 @@ export default function EditDeleteStudents() {
                   <Button
                     variant="contained"
                     color="error"
-                    onClick={handleSingleStudentDelete}
+                    onClick={handleSingleCourseDelete}
                     disabled={apiCalled}
                   >
                     Delete

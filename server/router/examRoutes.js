@@ -12,7 +12,7 @@ const router = express.Router();
 // storage solution for uploading pdf files to storage area
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads");
+    cb(null, "uploads/pyqs");
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);

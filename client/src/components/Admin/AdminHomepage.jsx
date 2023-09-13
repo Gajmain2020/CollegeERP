@@ -96,7 +96,6 @@ export default function AdminHomepage() {
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={openAddAdminBackdrop}
-        className="test"
       >
         <div className="backdrop-element">
           <div className="backdrop-close-btn">

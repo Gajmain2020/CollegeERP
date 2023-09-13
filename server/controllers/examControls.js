@@ -1,7 +1,6 @@
 import Admin from "../models/admin.js";
 import bcrypt from "bcryptjs";
 import Exams from "../models/exams.js";
-import multer from "multer";
 import pyq from "../models/pyq.js";
 
 export const newExamFormRelease = async (req, res) => {

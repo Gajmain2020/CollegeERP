@@ -58,18 +58,6 @@ export default function AcademicsAdmin() {
         </div>
         <div className="button-row">
           <Button
-            onClick={() =>
-              navigate(
-                `/admin/${userDetailes.department}/${userDetailes.id}/time-table-management`
-              )
-            }
-            variant="contained"
-            fullWidth
-            size="small"
-          >
-            Time Table Management
-          </Button>
-          <Button
             variant="contained"
             onClick={() =>
               navigate(
@@ -80,20 +68,6 @@ export default function AcademicsAdmin() {
             size="small"
           >
             Complaints
-          </Button>
-        </div>
-        <div className="button-row">
-          <Button
-            variant="contained"
-            onClick={() =>
-              navigate(
-                `/admin/${userDetailes.department}/${userDetailes.id}/notice-management`
-              )
-            }
-            fullWidth
-            size="small"
-          >
-            Add / Edit Notice
           </Button>
           <Button
             onClick={() =>

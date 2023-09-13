@@ -62,21 +62,14 @@ export const loginAdmin = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    return res
-      .status(200)
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-      })
-      .json({
-        token: token,
-        message: "Login Successful",
-        successful: true,
-        department: user.department,
-        id: user._id,
-      });
+    return res.cookie("token", token).status(200).json({
+      token: token,
+      message: "Login Successful",
+      successful: true,
+      department: user.department,
+      id: user._id,
+    });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Something went wrong",
       successful: false,

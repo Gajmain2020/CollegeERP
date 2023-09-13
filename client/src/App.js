@@ -28,6 +28,15 @@ import ReleaseFeeNotice from "./components/Admin/AccountsAdmin/helper/ReleaseFee
 import RemainderToStudent from "./components/Admin/AccountsAdmin/helper/RemainderToStudent";
 import ShowDataStudents from "./components/ShowData/ShowDataStudents";
 import EditDeleteStudents from "./components/Admin/AcademicsAdmin/Helper/EditDeleteStudents";
+import TimeTableManagement from "./components/Admin/AcademicsAdmin/Helper/TimeTableManagement";
+import FacultyManagement from "./components/Admin/AcademicsAdmin/Helper/FacultyManagement";
+import ShowDataFaculties from "./components/ShowData/ShowDataFaculties";
+import EditDeleteFaculties from "./components/Admin/AcademicsAdmin/Helper/EditDeleteFaculties";
+import CourseManagement from "./components/Admin/AcademicsAdmin/Helper/CourseManagement";
+import AddCourse from "./components/Admin/AcademicsAdmin/Helper/AddCourse";
+import EditCourse from "./components/Admin/AcademicsAdmin/Helper/EditCourse";
+import DeleteCourse from "./components/Admin/AcademicsAdmin/Helper/DeleteCourse";
+import AddSyllabus from "./components/Admin/AcademicsAdmin/Helper/AddSyllabus";
 
 export default function App() {
   return (
@@ -67,13 +76,17 @@ export default function App() {
                   element={<EditDeleteStudents />}
                 />
               </Route>
-              <Route
-                path=":id/faculty-management"
-                element={<>Need to work bro</>}
-              />
+              <Route path=":id/faculty-management">
+                <Route path="" element={<FacultyManagement />} />
+                <Route
+                  path="edit-delete-faculties"
+                  element={<EditDeleteFaculties />}
+                />
+              </Route>
+
               <Route
                 path=":id/time-table-management"
-                element={<>Need to work bro</>}
+                element={<TimeTableManagement />}
               />
               <Route path=":id/complaints" element={<>Need to work bro</>} />
               <Route
@@ -81,10 +94,13 @@ export default function App() {
                 element={<>Need to work bro</>}
               />
 
-              <Route
-                path=":id/course-management"
-                element={<>Need to work bro</>}
-              />
+              <Route path=":id/course-management">
+                <Route path="" element={<CourseManagement />} />
+                <Route path="add-course" element={<AddCourse />} />
+                <Route path="edit-course" element={<EditCourse />} />
+                <Route path="delete-course" element={<DeleteCourse />} />
+                <Route path="add-course-syllabus" element={<AddSyllabus />} />
+              </Route>
             </Route>
           </Route>
           <Route path="/admin-login" element={<AdminLogin />} />
@@ -95,6 +111,10 @@ export default function App() {
           <Route
             path="/show-data/students/:data"
             element={<ShowDataStudents />}
+          />
+          <Route
+            path="/show-data/faculty/:data"
+            element={<ShowDataFaculties />}
           />
           <Route
             path="/show-data/library/issue-history/:data"
