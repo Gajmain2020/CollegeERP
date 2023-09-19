@@ -37,6 +37,8 @@ import AddCourse from "./components/Admin/AcademicsAdmin/Helper/AddCourse";
 import EditCourse from "./components/Admin/AcademicsAdmin/Helper/EditCourse";
 import DeleteCourse from "./components/Admin/AcademicsAdmin/Helper/DeleteCourse";
 import AddSyllabus from "./components/Admin/AcademicsAdmin/Helper/AddSyllabus";
+import CreateFeeStructure from "./components/Admin/AccountsAdmin/helper/CreateFeeStructure";
+import AddOfflineFeeData from "./components/Admin/AccountsAdmin/helper/AddOfflineFeeData";
 
 export default function App() {
   return (
@@ -63,6 +65,14 @@ export default function App() {
               <Route
                 path="send-fee-payment-remainder/:id"
                 element={<RemainderToStudent />}
+              />
+              <Route
+                path="create-fee-structure/:id"
+                element={<CreateFeeStructure />}
+              />
+              <Route
+                path="add-offline-fee-detail/:id"
+                element={<AddOfflineFeeData />}
               />
               <Route
                 path="release-backlog-form/:id"

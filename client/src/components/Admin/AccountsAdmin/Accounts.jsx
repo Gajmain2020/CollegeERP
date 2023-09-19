@@ -54,11 +54,29 @@ export default function Accounts({ id }) {
             </Button>
           </div>
           <div className="button-row">
-            <Button fullWidth>Create Fee Structure</Button>
+            <Button
+              fullWidth
+              onClick={() => {
+                navigate(
+                  `/admin/${userDetailes.department}/create-fee-structure/${userDetailes.id}`
+                );
+              }}
+            >
+              Create Fee Structure
+            </Button>
             <Button fullWidth>View Fee Paid List</Button>
           </div>
           <div className="button-row">
-            <Button fullWidth>Add Offline Payment</Button>
+            <Button
+              fullWidth
+              onClick={() => {
+                navigate(
+                  `/admin/${userDetailes.department}/add-offline-fee-detail/${userDetailes.id}`
+                );
+              }}
+            >
+              Add Offline Payment
+            </Button>
             <Button fullWidth>Complaint Resolution</Button>
           </div>
         </div>

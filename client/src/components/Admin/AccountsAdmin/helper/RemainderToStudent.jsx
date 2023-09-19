@@ -1,12 +1,31 @@
-import { Button, MenuItem, Paper, TextField } from "@mui/material";
+import {
+  Button,
+  MenuItem,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Backdrop,
+} from "@mui/material";
 import { useState } from "react";
-import { searchStudents } from "../../../../services/accounts";
+import {
+  searchStudents,
+  sendRemainderToStudent,
+} from "../../../../services/accounts";
+import SendTwoToneIcon from "@mui/icons-material/SendTwoTone";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function RemainderToStudent() {
   const semester = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
   const department = ["", "CSE", "CIVIL", "EE", "EEE", "ETC", "IT", "MECH"];
   const [students, setStudents] = useState(null);
   const [searched, setSearched] = useState(false);
+  const [sendRemainder, setSendRemainder] = useState(null);
+  const [apiCalled, setApiCalled] = useState(false);
 
   const [searchData, setSearchData] = useState({
     name: "",
@@ -14,6 +33,7 @@ export default function RemainderToStudent() {
     semester: "",
     section: "",
     department: "",
+    feePaid: "",
   });
 
   function handleSearchDataChange(e) {
@@ -28,6 +48,21 @@ export default function RemainderToStudent() {
       .then((res) => {
         setStudents(res.students);
         setSearched(true);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function handleSendRemainder() {
+    sendRemainderToStudent(sendRemainder)
+      .then((res) => {
+        setApiCalled(false);
+        alert(res.message);
+        if (res.succecssful === false) {
+          alert("i am here");
+          return;
+        }
+        setSendRemainder(() => null);
+        return;
       })
       .catch((err) => console.log(err));
   }
@@ -126,7 +161,131 @@ export default function RemainderToStudent() {
             </Paper>
           </div>
         ) : (
-          <>hello</>
+          <>
+            <div className="table">
+              <TableContainer component={Paper}>
+                <Table size="small" sx={{ minWidth: "650px" }}>
+                  <TableHead>
+                    <TableRow
+                      sx={{ backgroundColor: "#9EB384", height: "3em" }}
+                    >
+                      <TableCell>S.No.</TableCell>
+                      <TableCell>Roll Number</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Semester</TableCell>
+                      <TableCell>Department</TableCell>
+                      <TableCell sx={{ width: "15%" }}>
+                        Send Remainder
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {students.map((student, idx) => {
+                      return (
+                        <TableRow key={student._id}>
+                          <TableCell>{idx + 1}</TableCell>
+                          <TableCell>{student.rollNumber}</TableCell>
+                          <TableCell>{student.name}</TableCell>
+                          <TableCell>{student.semester}</TableCell>
+                          <TableCell>{student.department}</TableCell>
+                          <TableCell>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              onClick={() => {
+                                setSendRemainder(student);
+                              }}
+                            >
+                              <SendTwoToneIcon
+                                sx={{ transform: "rotate(-25deg)" }}
+                              />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
+            {sendRemainder !== null && (
+              <>
+                {" "}
+                <Backdrop
+                  sx={{
+                    color: "#fff",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                  }}
+                  open={sendRemainder !== null}
+                >
+                  <div className="backdrop-element">
+                    <div className="backdrop-close-btn">
+                      <Button
+                        variant="contained"
+                        color="error"
+                        size="small"
+                        onClick={() => {
+                          setSendRemainder(null);
+                        }}
+                      >
+                        <CloseIcon fontSize="large" />
+                      </Button>
+                    </div>
+                    <div className="backdrop-options">
+                      <div className="message" style={{ fontSize: "1.2em" }}>
+                        Are you sure you want to send remainder to student?
+                      </div>
+                      <div className="student-details">
+                        <div className="row">
+                          <span>Name ::</span> <b>{sendRemainder.name}</b>
+                        </div>
+                        <div className="row">
+                          <span>Roll Number ::</span>{" "}
+                          <b>{sendRemainder.rollNumber}</b>
+                        </div>
+                        <div className="row">
+                          <span>Semester :: </span>{" "}
+                          <b>{sendRemainder.semester}</b>
+                        </div>
+                        <div className="row">
+                          <span>Department :: </span>{" "}
+                          <b>{sendRemainder.department}</b>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "0.5em",
+                      }}
+                    >
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        color="warning"
+                        onClick={handleSendRemainder}
+                        disabled={apiCalled}
+                      >
+                        Send Remainder
+                      </Button>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        color="error"
+                        size="small"
+                        onClick={() => {
+                          setSendRemainder(null);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                </Backdrop>
+              </>
+            )}
+          </>
         )}
       </div>
     </div>

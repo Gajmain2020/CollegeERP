@@ -28,3 +28,25 @@ export async function searchStudents(searchData) {
     return error.response.data;
   }
 }
+
+export async function sendRemainderToStudent(studentData) {
+  try {
+    const response = await axios({
+      url: URL + "send-remainder-to-student",
+      method: "PATCH",
+      data: studentData,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function uploadFeeStructure(data) {
+  try {
+    const response = await axios.post(URL + "upload-fee-structure", data);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}

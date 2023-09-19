@@ -782,3 +782,7 @@ input::-webkit-inner-spin-button {
   justify-content: space-between;
   align-items: center;
 }
+
+.student-details {
+  color: rgb(79, 79, 79);
+}
